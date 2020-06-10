@@ -1,0 +1,65 @@
+									Test	task
+Implement	restful	web	application with	frontend	and	backend.
+
+Non	functional	requirements:
+The	application logic should	be	written in	a	functional	style	and in front-end	should	be	used
+Ecmascript6 and	other	options	are	available	to	choose	for	development. UX	and	design	won’t	be
+evaluated	by	this	task,	but	prefered	to	use	in	project	Bootstrap
+
+Programming	languges (one	of	options):
+• Java
+• Scala
+• Kotlin
+DataStore (one	of	options):
+• MongoDB
+• SQLite
+• H2
+• ElasticSearch
+Frameworks	(back	end options):
+• Spring	Framework
+• J2EE
+• Akka
+• Vertx.io
+Frameworks/Libraries	(front	end options):
+• AngularJS
+• React
+• Elm
+Project	builder	tool	(one of options)
+• Maven
+• SBT
+• Gradle
+
+In	addition, front-end part should	be	packaged	with	webpack	or	gulp.
+
+Testing:
+• For	testing	RESTful	web	service	use	REST-assured	(https://code.google.com/p/rest-assured/)
+• For	testing	User	Interface	use	SeleniumHQ	(http://docs.seleniumhq.org/) or	Jasmine
+(http://jasmine.github.io/edge/introduction.html)
+
+Functional	requirements:
+
+Conference management:
+• Create	new	conference
+• Cancel	conference
+• Check	conference	room	availability	(based	on	registered	participants	and	conference	room	max
+seats)
+
+Conference	participant	management:
+• Add	participant	to	conference
+• Remove	participant	from	conference
+
+Datastore specification:
+Conference
+Name Conference	name,	max	length	150	characters
+Date	time Conference	date	&	time
+Participant
+Full	name Person	full	name
+Birth	date Date	of	birth
+Conference	room
+Name Room	name,	like	“M/S	Baltic	Queen	conference”
+Location M/S	Baltic	Queen
+Max	seats 124
+NB!!!	This	is	only	approximate	structure.	Other	fields,	which	are	required	to	fulfill	application
+requirements	should	be	thought	out	by	own	self.
+Result	should	be	stored	on	GitHub	or	BitBucket	and	link sent	to robert.kaev@tallink.ee and
+yury.repeshov@tallink.ee.
