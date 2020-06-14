@@ -12,7 +12,7 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
         @PropertySource("/properties/actuator.properties"),
         @PropertySource("/properties/datasource.properties"),
         @PropertySource("/properties/h2-console.properties"),
-        @PropertySource("/properties/notification.properties")
+        @PropertySource("/properties/server.properties")
 })
 public class PropertiesLoader {
 
