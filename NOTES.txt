@@ -1,2 +1,5 @@
 Exceptions handling based on https://spring.io/guides/tutorials/rest/
 
+Task's one requirement is to have functionality
+Check conference	room availability	(based	on	registered	participants and	conference	room	max	seats)
+Based on the additional information in the parentheses, I concluded that this function should not be checking whether the conference room is available (or already booked) as the text states but whether a conference has room for additional participants.

@@ -65,18 +65,18 @@ class ParticipantServiceTest {
 
     @Test
     void addParticipantToConference_conferenceDoesntExist() {
-        doReturn(null).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());
-        ;
+        doReturn(null).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
+
 
         assertThrows(ConferenceNotFoundException.class, () -> participantService.addParticipantToConference(participant, conference));
     }
 
     @Test
     void addParticipantToConference_noAvailableSeats() {
-        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());
-        ;
+        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
+
         ConferenceRoom conferenceRoom = new ConferenceRoom("testRoomName", "testRoomLocation", 0);
         conference.setConferenceRoom(conferenceRoom);
 
@@ -85,9 +85,9 @@ class ParticipantServiceTest {
 
     @Test
     void addParticipantToConference_participantAlreadyRegistered() {
-        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());
-        ;
+        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
+
         conference.addParticipant(participant);
 
         assertThrows(ParticipantAlreadyRegisteredException.class, () -> participantService.addParticipantToConference(participant, conference));
@@ -95,36 +95,33 @@ class ParticipantServiceTest {
 
     @Test
     void addParticipantToConference_success() {
-        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());
-        ;
+        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
 
         assertDoesNotThrow(() -> participantService.addParticipantToConference(participant, conference));
     }
 
     @Test
     void removeParticipantFromConference_conferenceDoesntExist() {
-        doReturn(null).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());
-        ;
+        doReturn(null).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
 
         assertThrows(ConferenceNotFoundException.class, () -> participantService.removeParticipantFromConference(participant, conference));
     }
 
     @Test
     void removeParticipantFromConference_participantNotRegistered() {
-        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());
-        ;
+        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
 
         assertThrows(ParticipantNotRegisteredException.class, () -> participantService.removeParticipantFromConference(participant, conference));
     }
 
     @Test
     void removeParticipantFromConference_success() {
-        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());
-        ;
+        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
+
         conference.addParticipant(participant);
 
         assertDoesNotThrow(() -> participantService.removeParticipantFromConference(participant, conference));

@@ -3,7 +3,6 @@ package ee.mrtnh.tallink_test.service;
 import ee.mrtnh.tallink_test.exception.ConferenceAlreadyExistsException;
 import ee.mrtnh.tallink_test.exception.ConferenceNotFoundException;
 import ee.mrtnh.tallink_test.exception.ConferenceRoomBookedException;
-import ee.mrtnh.tallink_test.exception.ConferenceRoomNotFoundException;
 import ee.mrtnh.tallink_test.model.Conference;
 import ee.mrtnh.tallink_test.model.ConferenceRoom;
 import ee.mrtnh.tallink_test.model.Participant;
@@ -25,7 +24,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
 
 @ExtendWith(MockitoExtension.class)
-//@SpringBootTest
 class ConferenceServiceTest {
 
     // TODO: set up test base with rooms and conferences?
@@ -54,66 +52,86 @@ class ConferenceServiceTest {
 
     @Test
     void addConference_alreadyExists() {
-        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());;
+        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
+        ;
 
         assertThrows(ConferenceAlreadyExistsException.class, () -> conferenceService.addConference(conference));
     }
 
     @Test
     void addConference_roomNotAvailable() {
-        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());;
-
         LocalDateTime conferenceStartDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 10, 0);
         LocalDateTime conferenceEndDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 11, 0);
         Conference conflictingConference = new Conference("conflictingConference", conferenceStartDateTime, conferenceEndDateTime);
-        conference.getConferenceRoom().getConferences().add(conflictingConference);
+        conflictingConference.setConferenceRoom(conference.getConferenceRoom());
+        doReturn(null).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conflictingConference.getName(), conflictingConference.getStartDateTime(), conflictingConference.getEndDateTime());
+        ;
 
-        assertThrows(ConferenceRoomBookedException.class, () -> conferenceService.addConference(conference));
+        conference.getConferenceRoom().getConferences().add(conference);
+        doReturn(conference.getConferenceRoom())
+                .when(conferenceRoomRepository).findConferenceRoomByNameAndAndLocation(
+                conflictingConference.getConferenceRoom().getName()
+                , conflictingConference.getConferenceRoom().getLocation()
+        );
+
+        assertThrows(ConferenceRoomBookedException.class, () -> conferenceService.addConference(conflictingConference));
     }
 
     @Test
     void addConference_success() {
         // TODO: Optional.empty() instead of null?
-        doReturn(null).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());
+        doReturn(null).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
+        doReturn(conference.getConferenceRoom())
+                .when(conferenceRoomRepository).findConferenceRoomByNameAndAndLocation(
+                conference.getConferenceRoom().getName()
+                , conference.getConferenceRoom().getLocation()
+        );
 
         assertDoesNotThrow(() -> conferenceService.addConference(conference));
     }
 
     @Test
     void cancelConference_conferenceDoesntExist() {
-        doReturn(null).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());
+        doReturn(null).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
 
         assertThrows(ConferenceNotFoundException.class, () -> conferenceService.cancelConference(conference));
     }
 
     @Test
     void cancelConference_success() {
-        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());;
+        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
 
         assertDoesNotThrow(() -> conferenceService.cancelConference(conference));
     }
 
     @Test
+    void checkConferenceRoomAvailability_conferenceDoesntExist() {
+        doReturn(null).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
+
+        assertThrows(ConferenceNotFoundException.class, () -> conferenceService.checkConferenceSeatsAvailability(conference));
+    }
+
+/*    @Test // TODO: this not necessary if UI has rooms for selection based on data fetched from DB
     void checkConferenceRoomAvailability_roomDoesntExist() {
-        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());;
+        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
+
         doReturn(null).when(conferenceRoomRepository).findConferenceRoomByNameAndAndLocation(
                 conferenceRoom.getName(), conferenceRoom.getLocation());
 
-        assertThrows(ConferenceRoomNotFoundException.class, () -> conferenceService.checkConferenceRoomAvailability(conference));
-    }
+        assertThrows(ConferenceRoomNotFoundException.class, () -> conferenceService.checkConferenceSeatsAvailability(conference));
+    }*/
 
     @Test
     void checkConferenceRoomAvailability_success() {
-        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateAndTimeAndEndDateAndTime(
-                conference.getName(), conference.getStartDateAndTime(), conference.getEndDateAndTime());;
-        doReturn(null).when(conferenceRoomRepository).findConferenceRoomByNameAndAndLocation(
-                conferenceRoom.getName(), conferenceRoom.getLocation());
+        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
 
         LocalDate dateOfBirth = LocalDate.of(2020, Month.JUNE, 20);
         conference.getParticipants().add(new Participant("FirstName_1 LastName_1", dateOfBirth));
@@ -122,7 +140,7 @@ class ConferenceServiceTest {
         conference.getParticipants().add(new Participant("FirstName_4 LastName_4", dateOfBirth));
         conference.getParticipants().add(new Participant("FirstName_5 LastName_5", dateOfBirth));
 
-        assertDoesNotThrow(() -> conferenceService.checkConferenceRoomAvailability(conference));
+        assertDoesNotThrow(() -> conferenceService.checkConferenceSeatsAvailability(conference));
     }
 
 

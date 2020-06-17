@@ -14,6 +14,7 @@ public class ParticipantServiceImpl implements ParticipantService {
 
     @Autowired
     private ParticipantRepository participantRepository;
+
     @Autowired
     private ConferenceRepository conferenceRepository;
 

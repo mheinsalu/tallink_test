@@ -3,7 +3,6 @@ package ee.mrtnh.tallink_test.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.ValidationException;
@@ -23,16 +22,16 @@ public class Conference {
     @GeneratedValue(strategy = IDENTITY)
     private long id;
 
-    public Conference(String name, LocalDateTime startDateAndTime, LocalDateTime endDateAndTime) {
+    public Conference(String name, LocalDateTime startDateTime, LocalDateTime endDateTime) {
         if (name.length() > 150) {
             throw new ValidationException("Conference's name must be <=150 characters");
         }
-        if (startDateAndTime.isAfter(endDateAndTime)) {
+        if (startDateTime.isAfter(endDateTime)) {
             throw new ValidationException("Conference's start time must be before its end time");
         }
         this.name = name;
-        this.startDateAndTime = startDateAndTime;
-        this.endDateAndTime = endDateAndTime;
+        this.startDateTime = startDateTime;
+        this.endDateTime = endDateTime;
     }
 
     @NotNull(message = "Conference must have name")
@@ -41,24 +40,27 @@ public class Conference {
 
     @NotNull(message = "Conference must have starting date and time")
     @Column(nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyy HH:mm")
-    private LocalDateTime startDateAndTime;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
+    private LocalDateTime startDateTime;
 
     @NotNull(message = "Conference must have ending date and time")
     @Column(nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyy HH:mm")
-    private LocalDateTime endDateAndTime;
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
+    private LocalDateTime endDateTime;
 
-    @NotNull(message = "Conference must have room")
+    /*@NotNull(message = "Conference must have conference room id") // add test
+    @Column(name = "CONFERENCE_ROOM_ID")
+    private Long conferenceRoomId;*/
+
     @ManyToOne
     @JoinColumn(name = "CONFERENCE_ROOM_ID")
-    ConferenceRoom conferenceRoom;
+    ConferenceRoom conferenceRoom; // TODO: just room id better so JSON would not have to send entire room?
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(name = "CONFERENCE_PARTICIPANTS",
             joinColumns = @JoinColumn(name = "CONFERENCE_ID"),
             inverseJoinColumns = @JoinColumn(name = "PARTICIPANT_ID"))
-    @ToString.Exclude
+//    @ToString.Exclude
     private Set<Participant> participants = new HashSet<>();
 
     public boolean addParticipant(Participant participant) {
@@ -69,7 +71,7 @@ public class Conference {
         return participants.remove(participant);
     }
 
-    public boolean isRoomCapacityFilled() {
-        return participants.size() >= conferenceRoom.getMaxSeats();
+    public Integer getAvailableRoomCapacity() {
+        return conferenceRoom.getMaxSeats() - participants.size();
     }
 }

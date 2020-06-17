@@ -1,22 +1,20 @@
 package ee.mrtnh.tallink_test.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
-
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
+// TODO: builder?
 @Data
 @NoArgsConstructor
 @Entity
@@ -44,19 +42,26 @@ public class ConferenceRoom {
     @Column(nullable = false)
     Integer maxSeats;
 
-    @OneToMany(mappedBy = "conferenceRoom")
+    @OneToMany(
+            mappedBy = "conferenceRoom",
+//            cascade = CascadeType.ALL,
+            orphanRemoval = true)
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude // including this would cause infinite referential loop (conference<->conferenceRoom)
     private Set<Conference> conferences = new HashSet<>();
 
     public boolean isConferenceRoomBooked(LocalDateTime startDateTime, LocalDateTime endDateTime) {
         return conferences.stream().anyMatch(conference -> {
-            if (startDateTime.isAfter(conference.getStartDateAndTime()) && startDateTime.isBefore(conference.getEndDateAndTime())) {
+            if (startDateTime.isAfter(conference.getStartDateTime()) && startDateTime.isBefore(conference.getEndDateTime())) {
                 return true;
-            } else if (endDateTime.isAfter(conference.getStartDateAndTime()) && endDateTime.isBefore(conference.getEndDateAndTime())) {
+            } else if (endDateTime.isAfter(conference.getStartDateTime()) && endDateTime.isBefore(conference.getEndDateTime())) {
+                return true;
+            } else if (startDateTime.isEqual(conference.getStartDateTime()) || endDateTime.isEqual(conference.getEndDateTime())) {
                 return true;
             }
             return false;
         });
-
     }
+
+
 }
