@@ -55,7 +55,7 @@ public class Conference {
 
     @ManyToOne
     @JoinColumn(name = "CONFERENCE_ROOM_ID")
-    private ConferenceRoom conferenceRoom; // TODO: just room id better so JSON would not have to send entire room?
+    private ConferenceRoom conferenceRoom;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(name = "CONFERENCE_PARTICIPANTS",

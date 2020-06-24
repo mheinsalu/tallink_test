@@ -34,8 +34,6 @@ public class ConferenceServiceImpl implements ConferenceService {
             throw new ConferenceRoomBookedException(roomFromDb);
         }
         conference.setConferenceRoom(roomFromDb);
-        // TODO: I don't like this. Since UI has selectable table of rooms that are fetched from db,
-        //  I want to be able to send room ID, save Conference to db nad have Conference.conferenceRoom populated on repo.find
 
         Conference savedConference = conferenceRepository.save(conference);
         String returnMessage = String.format("Added/saved to db conference %s", savedConference);
@@ -45,11 +43,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     public String cancelConference(Conference conference) {
         log.info("Cancelling conference {}", conference);
-        Conference savedConference = repoHelper.findConference(conference);
-        if (savedConference == null) {
-            log.warn("{} doesn't exist", conference);
-            throw new ConferenceNotFoundException(conference);
-        }
+        Conference savedConference = findExistingConference(conference);
         conferenceRepository.deleteById(savedConference.getId());
         String returnMessage = String.format("Cancelled conference %s", conference);
         log.info(returnMessage);
@@ -58,16 +52,21 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     public String checkConferenceSeatsAvailability(Conference conference) {
         log.info("Checking whether there are available seats in conference {}", conference);
-        Conference savedConference = repoHelper.findConference(conference); // TODO: duplicate code? refactor
-        if (savedConference == null) {
-            log.warn("{} doesn't exist", conference);
-            throw new ConferenceNotFoundException(conference);
-        }
+        Conference savedConference = findExistingConference(conference);
         Integer availableSeats = savedConference.getAvailableRoomCapacity();
 
         String returnMessage = String.format("There are %d available seats in conference %s", availableSeats, conference);
         log.info(returnMessage);
         return returnMessage;
+    }
+
+    private Conference findExistingConference(Conference conference) {
+        Conference savedConference = repoHelper.findConference(conference);
+        if (savedConference == null) {
+            log.warn("{} doesn't exist", conference);
+            throw new ConferenceNotFoundException(conference);
+        }
+        return savedConference;
     }
 
 }

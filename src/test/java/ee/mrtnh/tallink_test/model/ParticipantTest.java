@@ -4,14 +4,14 @@ import org.junit.jupiter.api.Test;
 
 import javax.validation.ValidationException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.Month;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ParticipantTest {
 
-    LocalDate dateOfBirth = LocalDate.of(2020, Month.JUNE, 20);
+    private final LocalDate dateOfBirth = LocalDate.of(2020, Month.JUNE, 20);
 
     @Test
     void createParticipant_valid() {

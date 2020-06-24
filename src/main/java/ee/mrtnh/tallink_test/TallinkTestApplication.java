@@ -9,7 +9,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 @SpringBootApplication
 public class TallinkTestApplication {
-
+    // TODO: test on external TC at work
+    // TODO: run spotbugs
     public static void main(String[] args) {
         SpringApplication.run(TallinkTestApplication.class, args);
     }

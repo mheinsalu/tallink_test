@@ -8,11 +8,11 @@ import org.springframework.context.support.PropertySourcesPlaceholderConfigurer;
 
 @Configuration
 @PropertySources({
-        @PropertySource("/properties/application.properties"),
-        @PropertySource("/properties/actuator.properties"),
-        @PropertySource("/properties/datasource.properties"),
-        @PropertySource("/properties/h2-console.properties"),
-        @PropertySource("/properties/server.properties")
+        @PropertySource("classpath:/properties/application.properties"),
+        @PropertySource("classpath:/properties/actuator.properties"),
+        @PropertySource("classpath:/properties/datasource.properties"),
+        @PropertySource("classpath:/properties/h2-console.properties"),
+        @PropertySource("classpath:/properties/server.properties")
 })
 public class PropertiesLoader {
 

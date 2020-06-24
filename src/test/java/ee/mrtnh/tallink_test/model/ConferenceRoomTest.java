@@ -8,11 +8,12 @@ import java.time.Month;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class ConferenceRoomTest {
 
-    ConferenceRoom conferenceRoom = new ConferenceRoom("testRoomName", "testRoomLocation", 5);
+    private final ConferenceRoom conferenceRoom = new ConferenceRoom("testRoomName", "testRoomLocation", 5);
 
     @BeforeEach
     void setUp() {

@@ -12,8 +12,6 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class RepoHelper {
 
-    // TODO: tests
-
     @Autowired
     private ConferenceRepository conferenceRepository;
 

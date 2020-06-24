@@ -29,21 +29,19 @@ import static org.mockito.Mockito.doReturn;
 class ParticipantServiceTest {
 
     @Mock
-    ParticipantRepository participantRepository;
+    private ParticipantRepository participantRepository;
 
     @Mock
-    ConferenceRepository conferenceRepository;
+    private ConferenceRepository conferenceRepository;
 
     @Mock
-    RepoHelper repoHelper;
+    private RepoHelper repoHelper;
 
     @InjectMocks
-    ParticipantServiceImpl participantService;
+    private ParticipantServiceImpl participantService;
 
-    Conference conference;
-    Participant participant;
-    ConferenceRoom conferenceRoom;
-    final Integer MAX_CAPACITY = 5;
+    private Conference conference;
+    private Participant participant;
 
     @BeforeEach
     void setUp() {
@@ -53,7 +51,8 @@ class ParticipantServiceTest {
         LocalDateTime conferenceStartDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 10, 15);
         LocalDateTime conferenceEndDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 11, 15);
         conference = new Conference("conferenceName", conferenceStartDateTime, conferenceEndDateTime);
-        conferenceRoom = new ConferenceRoom("testRoomName", "testRoomLocation", MAX_CAPACITY);
+        Integer maxCapacity = 5;
+        ConferenceRoom conferenceRoom = new ConferenceRoom("testRoomName", "testRoomLocation", maxCapacity);
         conference.setConferenceRoom(conferenceRoom);
     }
 

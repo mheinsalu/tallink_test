@@ -14,10 +14,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ConferenceTest {
 
-    Conference conference;
-    LocalDate dateOfBirth = LocalDate.of(2020, Month.JUNE, 20);
-    LocalDateTime conferenceStartDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 10, 0);
-    Participant participant = new Participant("FirstName LastName", dateOfBirth);
+    private Conference conference;
+    private final LocalDate dateOfBirth = LocalDate.of(2020, Month.JUNE, 20);
+    private final LocalDateTime conferenceStartDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 10, 0);
+    private final Participant participant = new Participant("FirstName LastName", dateOfBirth);
 
     @BeforeEach
     void setUp() {

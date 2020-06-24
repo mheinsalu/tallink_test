@@ -15,7 +15,6 @@ import java.util.Set;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
-// TODO: builder?
 @Data
 @NoArgsConstructor
 @Entity
@@ -24,8 +23,6 @@ public class ConferenceRoom {
     @Id
     @GeneratedValue(strategy = IDENTITY)
     private long id;
-
-    // TODO: what happens to db id-s if one is deleted? google. should i have separate roomId?
 
     public ConferenceRoom(String name, String location, Integer maxSeats) {
         this.name = name;

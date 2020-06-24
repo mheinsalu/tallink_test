@@ -26,27 +26,24 @@ import static org.mockito.Mockito.doReturn;
 @ExtendWith(MockitoExtension.class)
 class ConferenceServiceTest {
 
-    // TODO: set up test base with rooms and conferences?
+    @Mock
+    private ConferenceRepository conferenceRepository;
 
     @Mock
-    ConferenceRepository conferenceRepository;
-
-    @Mock
-    RepoHelper repoHelper;
+    private RepoHelper repoHelper;
 
     @InjectMocks
-    ConferenceServiceImpl conferenceService;
+    private ConferenceServiceImpl conferenceService;
 
-    Conference conference;
-    ConferenceRoom conferenceRoom;
-    final Integer MAX_CAPACITY = 5;
+    private Conference conference;
 
     @BeforeEach
     void setUp() {
         LocalDateTime conferenceStartDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 10, 15);
         LocalDateTime conferenceEndDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 11, 15);
         conference = new Conference("conferenceName", conferenceStartDateTime, conferenceEndDateTime);
-        conferenceRoom = new ConferenceRoom("testRoomName", "testRoomLocation", MAX_CAPACITY);
+        Integer maxCapacity = 5;
+        ConferenceRoom conferenceRoom = new ConferenceRoom("testRoomName", "testRoomLocation", maxCapacity);
         conference.setConferenceRoom(conferenceRoom);
     }
 
@@ -73,7 +70,6 @@ class ConferenceServiceTest {
 
     @Test
     void addConference_success() {
-        // TODO: Optional.empty() instead of null?
         doReturn(null).when(repoHelper).findConference(conference);
         doReturn(conference.getConferenceRoom()).when(repoHelper).findConferenceRoom(conference.getConferenceRoom());
 
@@ -100,17 +96,6 @@ class ConferenceServiceTest {
 
         assertThrows(ConferenceNotFoundException.class, () -> conferenceService.checkConferenceSeatsAvailability(conference));
     }
-
-/*    @Test // TODO: this not necessary if UI has rooms for selection based on data fetched from DB
-    void checkConferenceRoomAvailability_roomDoesntExist() {
-        doReturn(conference).when(conferenceRepository).findConferenceByNameAndStartDateTimeAndEndDateTime(
-                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
-
-        doReturn(null).when(conferenceRoomRepository).findConferenceRoomByNameAndAndLocation(
-                conferenceRoom.getName(), conferenceRoom.getLocation());
-
-        assertThrows(ConferenceRoomNotFoundException.class, () -> conferenceService.checkConferenceSeatsAvailability(conference));
-    }*/
 
     @Test
     void checkConferenceRoomAvailability_success() {

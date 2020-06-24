@@ -1,5 +1,6 @@
-package ee.mrtnh.tallink_test.exception;
+package ee.mrtnh.tallink_test.controller.advice;
 
+import ee.mrtnh.tallink_test.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -39,14 +40,14 @@ class CustomAdvice {
 
     @ResponseBody
     @ExceptionHandler(ConferenceAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.CONFLICT)
     String ConferenceAlreadyExistsHandler(ConferenceAlreadyExistsException e) {
         return e.getMessage();
     }
 
     @ResponseBody
     @ExceptionHandler(ConferenceRoomBookedException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.CONFLICT)
     String ConferenceRoomBookedHandler(ConferenceRoomBookedException e) {
         return e.getMessage();
     }

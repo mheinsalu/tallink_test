@@ -1,5 +1,23 @@
-Exceptions handling based on https://spring.io/guides/tutorials/rest/
+Exceptions handling based on recommendation in https://spring.io/guides/tutorials/rest/
 
 Task's one requirement is to have functionality
 Check conference	room availability	(based	on	registered	participants and	conference	room	max	seats)
 Based on the additional information in the parentheses, I concluded that this function should not be checking whether the conference room is available (or already booked) as the text states but whether a conference has room for additional participants.
+
+About ConferenceServiceImpl.addConference's line conference.setConferenceRoom(roomFromDb):
+I don't like this. Since UI has selectable table of rooms that are fetched from db,
+I want to be able to send room ID, save Conference to db nad have Conference.conferenceRoom populated on repo.find
+
+removeParticipant: should Participant be removed from Participant table if they are removed from Conference and are not registered to any other Conference?
+
+Tests: no need to test/check if conference room exists when adding conference because the selection of rooms available to user in UI is fetched from DB
+
+TODO: It would be better to move findExistingConference from serviceImpls to RepoHelper but I don't have time to rewrite tests
+
+Testing RepoHelper would be testing JpaRepository interface. Is this best practice?
+https://www.infoworld.com/article/3543268/junit-5-tutorial-part-2-unit-testing-spring-mvc-with-junit-5.html?page=4
+
+TODO: should I set up test base with rooms and conferences?
+
+TODO: front-end can be separated/refactored into a separately deployed project/.war
+

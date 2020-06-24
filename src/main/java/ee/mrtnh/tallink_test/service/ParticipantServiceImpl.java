@@ -28,12 +28,8 @@ public class ParticipantServiceImpl implements ParticipantService {
 
     public String addParticipantToConference(Participant participant, Conference conference) {
 
-        Conference conferenceFromDb = repoHelper.findConference(conference);// TODO: separate to private method getExistingConference? maybe in repoUtil
-        if (conferenceFromDb == null) {
-            log.warn("{} not found", conference);
-            throw new ConferenceNotFoundException(conference);
-        }
-        if (conferenceFromDb.getAvailableRoomCapacity() == 0) { // TODO: separate to private method checkCapacity? maybe in repoUtil
+        Conference conferenceFromDb = findExistingConference(conference);
+        if (conferenceFromDb.getAvailableRoomCapacity() == 0) {
             log.warn("{} has no available seats", conferenceFromDb);
             throw new ConferenceCapacityFilledException(conferenceFromDb);
         }
@@ -49,18 +45,22 @@ public class ParticipantServiceImpl implements ParticipantService {
     }
 
     public String removeParticipantFromConference(Participant participant, Conference conference) {
-        Conference conferenceFromDb = repoHelper.findConference(conference);
-        if (conferenceFromDb == null) {
-            log.warn("{} not found", conference);
-            throw new ConferenceNotFoundException(conference);
-        }
+        Conference conferenceFromDb = findExistingConference(conference);
         if (conferenceFromDb.removeParticipant(participant)) {
-            // TODO: /note: should Participant be removed from Db? In that case should check If registered to other confs
             String message = String.format("Removed %s from %s", participant, conferenceFromDb);
             log.info(message);
             return message;
         }
         log.warn("Unable to remove {} from {}. Participant is not registered", participant, conferenceFromDb);
         throw new ParticipantNotRegisteredException(participant, conferenceFromDb);
+    }
+
+    private Conference findExistingConference(Conference conference) {
+        Conference savedConference = repoHelper.findConference(conference);
+        if (savedConference == null) {
+            log.warn("{} doesn't exist", conference);
+            throw new ConferenceNotFoundException(conference);
+        }
+        return savedConference;
     }
 }
