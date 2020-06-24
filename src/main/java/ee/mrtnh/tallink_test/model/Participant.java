@@ -1,14 +1,16 @@
 package ee.mrtnh.tallink_test.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
-import java.time.Instant;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,6 +23,7 @@ public class Participant {
 
     @Id
     @GeneratedValue(strategy = IDENTITY)
+    @EqualsAndHashCode.Exclude
     private long id;
 
     public Participant(String fullName, LocalDate dateOfBirth) {
@@ -32,16 +35,18 @@ public class Participant {
     }
 
     @NotNull(message = "Participant must have name")
+    @Pattern(regexp = ".+ .+")
     @Column(nullable = false)
-    String fullName;
+    private String fullName;
 
     @NotNull(message = "Participant must have date of birth")
     @Column(nullable = false)
     @JsonFormat(pattern = "dd-MM-yyy")
-    LocalDate dateOfBirth;
+    private LocalDate dateOfBirth;
 
     @ManyToMany(mappedBy = "participants")
+    @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    Set<Conference> conferences = new HashSet<>();
+    private Set<Conference> conferences = new HashSet<>();
 
 }

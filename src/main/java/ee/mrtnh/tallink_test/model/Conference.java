@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -26,6 +27,9 @@ public class Conference {
         if (name.length() > 150) {
             throw new ValidationException("Conference's name must be <=150 characters");
         }
+        if (name.isEmpty()) {
+            throw new ValidationException("Conference's name must not be empty");
+        }
         if (startDateTime.isAfter(endDateTime)) {
             throw new ValidationException("Conference's start time must be before its end time");
         }
@@ -35,6 +39,7 @@ public class Conference {
     }
 
     @NotNull(message = "Conference must have name")
+    @Pattern(regexp = ".+", message = "Conference must have name")
     @Column(nullable = false)
     private String name;
 
@@ -48,13 +53,9 @@ public class Conference {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime endDateTime;
 
-    /*@NotNull(message = "Conference must have conference room id") // add test
-    @Column(name = "CONFERENCE_ROOM_ID")
-    private Long conferenceRoomId;*/
-
     @ManyToOne
     @JoinColumn(name = "CONFERENCE_ROOM_ID")
-    ConferenceRoom conferenceRoom; // TODO: just room id better so JSON would not have to send entire room?
+    private ConferenceRoom conferenceRoom; // TODO: just room id better so JSON would not have to send entire room?
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(name = "CONFERENCE_PARTICIPANTS",

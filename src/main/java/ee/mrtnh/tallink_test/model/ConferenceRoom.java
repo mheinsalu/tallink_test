@@ -7,6 +7,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -24,23 +25,27 @@ public class ConferenceRoom {
     @GeneratedValue(strategy = IDENTITY)
     private long id;
 
+    // TODO: what happens to db id-s if one is deleted? google. should i have separate roomId?
+
     public ConferenceRoom(String name, String location, Integer maxSeats) {
         this.name = name;
         this.location = location;
         this.maxSeats = maxSeats;
     }
 
-    @NotNull(message = "Conference room must have name")
+    @NotNull(message = "Conference room must have name") // TODO: doubles Pattern constraint?
+    @Pattern(regexp = ".+", message = "Conference room must have name")
     @Column(nullable = false)
-    String name;
+    private String name;
 
     @NotNull(message = "Conference room must have location")
+    @Pattern(regexp = ".+", message = "Conference room must have location")
     @Column(nullable = false)
-    String location;
+    private String location;
 
     @Positive(message = "Conference room must have max seats amount (positive integer)")
     @Column(nullable = false)
-    Integer maxSeats;
+    private Integer maxSeats;
 
     @OneToMany(
             mappedBy = "conferenceRoom",

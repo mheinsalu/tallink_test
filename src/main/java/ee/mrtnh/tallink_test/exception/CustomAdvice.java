@@ -17,9 +17,9 @@ class CustomAdvice {
     }
 
     @ResponseBody
-    @ExceptionHandler(ConferenceRoomCapacityFilledException.class)
+    @ExceptionHandler(ConferenceCapacityFilledException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    String ConferenceRoomCapacityFilledHandler(ConferenceRoomCapacityFilledException e) {
+    String ConferenceRoomCapacityFilledHandler(ConferenceCapacityFilledException e) {
         return e.getMessage();
     }
 

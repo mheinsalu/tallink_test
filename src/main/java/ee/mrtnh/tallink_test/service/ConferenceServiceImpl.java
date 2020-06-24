@@ -6,7 +6,7 @@ import ee.mrtnh.tallink_test.exception.ConferenceRoomBookedException;
 import ee.mrtnh.tallink_test.model.Conference;
 import ee.mrtnh.tallink_test.model.ConferenceRoom;
 import ee.mrtnh.tallink_test.repo.ConferenceRepository;
-import ee.mrtnh.tallink_test.repo.ConferenceRoomRepository;
+import ee.mrtnh.tallink_test.util.RepoHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,18 +16,18 @@ import org.springframework.stereotype.Service;
 public class ConferenceServiceImpl implements ConferenceService {
 
     @Autowired
-    private ConferenceRepository conferenceRepository;
+    ConferenceRepository conferenceRepository;
 
     @Autowired
-    private ConferenceRoomRepository conferenceRoomRepository;
+    RepoHelper repoHelper;
 
     public String addConference(Conference conference) {
         log.info("Adding conference {}", conference);
-        if (findConference(conference) != null) {
+        if (repoHelper.findConference(conference) != null) {
             log.warn("{} already exists", conference);
             throw new ConferenceAlreadyExistsException(conference);
         }
-        ConferenceRoom roomFromDb = findConferenceRoom(conference.getConferenceRoom());
+        ConferenceRoom roomFromDb = repoHelper.findConferenceRoom(conference.getConferenceRoom());
         if (roomFromDb.isConferenceRoomBooked(conference.getStartDateTime(), conference.getEndDateTime())) {
             log.warn("{} is already booked in time period {} - {}",
                     roomFromDb, conference.getStartDateTime(), conference.getEndDateTime());
@@ -40,12 +40,12 @@ public class ConferenceServiceImpl implements ConferenceService {
         Conference savedConference = conferenceRepository.save(conference);
         String returnMessage = String.format("Added/saved to db conference %s", savedConference);
         log.info(returnMessage);
-        return returnMessage; // TODO: change message?
+        return returnMessage;
     }
 
     public String cancelConference(Conference conference) {
         log.info("Cancelling conference {}", conference);
-        Conference savedConference = findConference(conference);
+        Conference savedConference = repoHelper.findConference(conference);
         if (savedConference == null) {
             log.warn("{} doesn't exist", conference);
             throw new ConferenceNotFoundException(conference);
@@ -58,7 +58,7 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     public String checkConferenceSeatsAvailability(Conference conference) {
         log.info("Checking whether there are available seats in conference {}", conference);
-        Conference savedConference = findConference(conference); // TODO: duplicate code? refactor
+        Conference savedConference = repoHelper.findConference(conference); // TODO: duplicate code? refactor
         if (savedConference == null) {
             log.warn("{} doesn't exist", conference);
             throw new ConferenceNotFoundException(conference);
@@ -68,18 +68,6 @@ public class ConferenceServiceImpl implements ConferenceService {
         String returnMessage = String.format("There are %d available seats in conference %s", availableSeats, conference);
         log.info(returnMessage);
         return returnMessage;
-    }
-
-    public Conference findConference(Conference conference) {
-        log.debug("Finding conference {}", conference);
-        return conferenceRepository.findConferenceByNameAndStartDateTimeAndEndDateTime(
-                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
-    }
-
-    public ConferenceRoom findConferenceRoom(ConferenceRoom conferenceRoom) {
-        log.debug("Finding conference room {}", conferenceRoom);
-        return conferenceRoomRepository.findConferenceRoomByNameAndAndLocation(
-                conferenceRoom.getName(), conferenceRoom.getLocation());
     }
 
 }

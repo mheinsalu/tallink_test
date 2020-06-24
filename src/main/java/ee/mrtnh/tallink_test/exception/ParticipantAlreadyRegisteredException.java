@@ -5,7 +5,7 @@ import ee.mrtnh.tallink_test.model.Participant;
 
 public class ParticipantAlreadyRegisteredException extends RuntimeException {
 
-    ParticipantAlreadyRegisteredException(Participant participant,Conference conference) {
+    public ParticipantAlreadyRegisteredException(Participant participant, Conference conference) {
         super("Participant " + participant + " is already registered to conference " + conference);
     }
 }
