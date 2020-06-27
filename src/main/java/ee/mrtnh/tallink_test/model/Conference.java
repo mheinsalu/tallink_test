@@ -3,6 +3,7 @@ package ee.mrtnh.tallink_test.model;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.ValidationException;
@@ -39,7 +40,7 @@ public class Conference {
     }
 
     @NotNull(message = "Conference must have name")
-    @Pattern(regexp = ".+", message = "Conference must have name")
+    @Pattern(regexp = ".{1,150}", message = "Conference must have name with length [1, 150]")
     @Column(nullable = false)
     private String name;
 
@@ -61,7 +62,7 @@ public class Conference {
     @JoinTable(name = "CONFERENCE_PARTICIPANTS",
             joinColumns = @JoinColumn(name = "CONFERENCE_ID"),
             inverseJoinColumns = @JoinColumn(name = "PARTICIPANT_ID"))
-//    @ToString.Exclude
+    @ToString.Exclude
     private Set<Participant> participants = new HashSet<>();
 
     public boolean addParticipant(Participant participant) {

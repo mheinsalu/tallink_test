@@ -9,6 +9,6 @@ import java.time.LocalDateTime;
 @Repository
 public interface  ConferenceRepository extends JpaRepository<Conference, Long> {
 
-    public Conference findConferenceByNameAndStartDateTimeAndEndDateTime(String conferenceName, LocalDateTime startDateTime, LocalDateTime endDateTime);
+    Conference findConferenceByNameAndStartDateTimeAndEndDateTime(String conferenceName, LocalDateTime startDateTime, LocalDateTime endDateTime);
 
 }

@@ -19,5 +19,9 @@ https://www.infoworld.com/article/3543268/junit-5-tutorial-part-2-unit-testing-s
 
 TODO: should I set up test base with rooms and conferences?
 
-TODO: front-end can be separated/refactored into a separately deployed project/.war
+BindingResult handling in Controllers is duplicated code. Refactor?
+
+Some info level logs can (should?) be changed to debug
+
+Code checked with SpotBugs. Warning: Potential CRLF Injection for logs
 

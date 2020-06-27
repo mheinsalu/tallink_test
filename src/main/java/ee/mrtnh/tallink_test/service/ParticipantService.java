@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface ParticipantService {
 
-    public String addParticipantToConference(Participant participant, Conference conference);
+    String addParticipantToConference(Participant participant, Conference conference);
 
-    public String removeParticipantFromConference(Participant participant, Conference conference);
+    String removeParticipantFromConference(Participant participant, Conference conference);
 }

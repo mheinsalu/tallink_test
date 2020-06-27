@@ -38,6 +38,7 @@ public class ConferenceServiceImpl implements ConferenceService {
         Conference savedConference = conferenceRepository.save(conference);
         String returnMessage = String.format("Added/saved to db conference %s", savedConference);
         log.info(returnMessage);
+
         return returnMessage;
     }
 

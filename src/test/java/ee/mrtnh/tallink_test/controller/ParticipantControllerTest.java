@@ -35,7 +35,7 @@ class ParticipantControllerTest {
     private Conference conference;
     private Participant participant;
 
-    private String validJson = "{\n" +
+    private final String validJson = "{\n" +
             "    \"participant\": {\n" +
             "        \"fullName\": \"FirstName LastName\",\n" +
             "        \"dateOfBirth\": \"10-06-2020\"\n" +
@@ -80,7 +80,7 @@ class ParticipantControllerTest {
         mockMvc.perform(post("/addParticipantToConference")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(""))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isBadRequest());
     }
 
     @Test
@@ -98,6 +98,6 @@ class ParticipantControllerTest {
         mockMvc.perform(delete("/removeParticipantFromConference")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(""))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().isBadRequest());
     }
 }

@@ -30,13 +30,13 @@ public class ConferenceRoom {
         this.maxSeats = maxSeats;
     }
 
-    @NotNull(message = "Conference room must have name") // TODO: doubles Pattern constraint?
-    @Pattern(regexp = ".+", message = "Conference room must have name")
+    @NotNull(message = "Conference room must have name")
+    @Pattern(regexp = ".+", message = "Conference room must have name with non-zero length")
     @Column(nullable = false)
     private String name;
 
     @NotNull(message = "Conference room must have location")
-    @Pattern(regexp = ".+", message = "Conference room must have location")
+    @Pattern(regexp = ".+", message = "Conference room must have location with non-zero length")
     @Column(nullable = false)
     private String location;
 
@@ -46,7 +46,6 @@ public class ConferenceRoom {
 
     @OneToMany(
             mappedBy = "conferenceRoom",
-//            cascade = CascadeType.ALL,
             orphanRemoval = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude // including this would cause infinite referential loop (conference<->conferenceRoom)
@@ -58,12 +57,7 @@ public class ConferenceRoom {
                 return true;
             } else if (endDateTime.isAfter(conference.getStartDateTime()) && endDateTime.isBefore(conference.getEndDateTime())) {
                 return true;
-            } else if (startDateTime.isEqual(conference.getStartDateTime()) || endDateTime.isEqual(conference.getEndDateTime())) {
-                return true;
-            }
-            return false;
+            } else return startDateTime.isEqual(conference.getStartDateTime()) || endDateTime.isEqual(conference.getEndDateTime());
         });
     }
-
-
 }

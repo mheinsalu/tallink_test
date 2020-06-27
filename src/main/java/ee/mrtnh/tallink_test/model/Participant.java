@@ -28,14 +28,14 @@ public class Participant {
 
     public Participant(String fullName, LocalDate dateOfBirth) {
         if (!fullName.matches(".+ .+")) {
-            throw new ValidationException("Participant's full name must be formatted as FirstName_LastName");
+            throw new ValidationException("Participant's full name must be formatted as FirstName LastName");
         }
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
     }
 
     @NotNull(message = "Participant must have name")
-    @Pattern(regexp = ".+ .+")
+    @Pattern(regexp = ".+ .+", message = "Participant's name must match regex \".+ .+\" e.g. Firstname Lastname")
     @Column(nullable = false)
     private String fullName;
 
