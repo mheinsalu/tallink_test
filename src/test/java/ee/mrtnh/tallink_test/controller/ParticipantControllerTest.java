@@ -3,7 +3,7 @@ package ee.mrtnh.tallink_test.controller;
 import ee.mrtnh.tallink_test.model.Conference;
 import ee.mrtnh.tallink_test.model.ConferenceRoom;
 import ee.mrtnh.tallink_test.model.Participant;
-import ee.mrtnh.tallink_test.service.ParticipantServiceImpl;
+import ee.mrtnh.tallink_test.service.implementation.ParticipantServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

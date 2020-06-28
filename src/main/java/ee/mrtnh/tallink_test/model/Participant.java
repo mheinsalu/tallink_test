@@ -1,6 +1,7 @@
 package ee.mrtnh.tallink_test.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -47,6 +48,7 @@ public class Participant {
     @ManyToMany(mappedBy = "participants")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonIgnore
     private Set<Conference> conferences = new HashSet<>();
 
 }

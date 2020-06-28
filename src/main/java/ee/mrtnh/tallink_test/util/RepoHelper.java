@@ -29,4 +29,16 @@ public class RepoHelper {
         return conferenceRoomRepository.findConferenceRoomByNameAndAndLocation(
                 conferenceRoom.getName(), conferenceRoom.getLocation());
     }
+
+/*    public boolean isConferenceRoomBooked(ConferenceRoom conferenceRoom, LocalDateTime startDateTime, LocalDateTime endDateTime) {
+        List<Conference> conferences = conferenceRepository.findAllByConferenceRoom_Id(conferenceRoom.getId());
+        return conferences.stream().anyMatch(conference -> {
+            if (startDateTime.isAfter(conference.getStartDateTime()) && startDateTime.isBefore(conference.getEndDateTime())) {
+                return true;
+            } else if (endDateTime.isAfter(conference.getStartDateTime()) && endDateTime.isBefore(conference.getEndDateTime())) {
+                return true;
+            } else
+                return startDateTime.isEqual(conference.getStartDateTime()) || endDateTime.isEqual(conference.getEndDateTime());
+        });
+    }*/
 }

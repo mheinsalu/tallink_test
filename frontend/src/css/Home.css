@@ -1,0 +1,17 @@
+.Home {
+    text-align: center;
+}
+
+.Home .RedirectButton {
+    margin: 2px;
+}
+
+.Home h1 {
+    font-family: Arial, serif;
+    color: slateblue;
+}
+
+.Home p {
+    font-family: Arial, serif;
+    color: green;
+}

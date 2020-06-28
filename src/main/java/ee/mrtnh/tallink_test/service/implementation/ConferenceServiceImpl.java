@@ -1,4 +1,4 @@
-package ee.mrtnh.tallink_test.service;
+package ee.mrtnh.tallink_test.service.implementation;
 
 import ee.mrtnh.tallink_test.exception.ConferenceAlreadyExistsException;
 import ee.mrtnh.tallink_test.exception.ConferenceNotFoundException;
@@ -6,6 +6,7 @@ import ee.mrtnh.tallink_test.exception.ConferenceRoomBookedException;
 import ee.mrtnh.tallink_test.model.Conference;
 import ee.mrtnh.tallink_test.model.ConferenceRoom;
 import ee.mrtnh.tallink_test.repo.ConferenceRepository;
+import ee.mrtnh.tallink_test.service.ConferenceService;
 import ee.mrtnh.tallink_test.util.RepoHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -12,8 +12,8 @@
     <artifactId>tallink_test</artifactId>
     <version>1.0</version>
     <packaging>war</packaging>
-    <name>tallink_test_backend</name>
-    <description>Test task for Tallink - backend</description>
+    <name>tallink_test</name>
+    <description>Test task for Tallink</description>
 
     <properties>
         <java.version>12</java.version>
@@ -100,7 +100,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <finalName>tallink_test_assignment_backend</finalName>
+                    <finalName>tallink_test_assignment</finalName>
                 </configuration>
             </plugin>
 

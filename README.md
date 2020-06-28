@@ -1,3 +1,5 @@
-Built using Java 12 and Spring Boot. Uses embedded Tomcat server on port 8080. Run in IDE or package into .war and run on Tomcat. To run on external Tomcat, enable/uncomment spring.main.web-application-type=NONE in application.properties.
+Backend built using Java 12 and Spring Boot. Uses embedded Tomcat server on port 8080. Run in IDE or package into .war and run on external Tomcat server.
 
-See ASSIGNMENT.txt for task details. See NOTES.txt for notes on code.
+Fronted built using ReactJs. Development server runs on port 3000. Use commands "npm install" and "npm start" in /frontend directory to start. 
+
+See ASSIGNMENT.txt for task details. See developer_notes.txt for notes on code.

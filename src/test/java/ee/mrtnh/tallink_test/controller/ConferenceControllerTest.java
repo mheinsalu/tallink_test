@@ -2,7 +2,7 @@ package ee.mrtnh.tallink_test.controller;
 
 import ee.mrtnh.tallink_test.model.Conference;
 import ee.mrtnh.tallink_test.model.ConferenceRoom;
-import ee.mrtnh.tallink_test.service.ConferenceServiceImpl;
+import ee.mrtnh.tallink_test.service.implementation.ConferenceServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

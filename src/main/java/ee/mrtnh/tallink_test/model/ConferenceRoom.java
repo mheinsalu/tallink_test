@@ -1,5 +1,6 @@
 package ee.mrtnh.tallink_test.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -49,6 +50,7 @@ public class ConferenceRoom {
             orphanRemoval = true)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude // including this would cause infinite referential loop (conference<->conferenceRoom)
+    @JsonIgnore // Without this an infinite loop occurs when Serializing
     private Set<Conference> conferences = new HashSet<>();
 
     public boolean isConferenceRoomBooked(LocalDateTime startDateTime, LocalDateTime endDateTime) {
@@ -57,7 +59,8 @@ public class ConferenceRoom {
                 return true;
             } else if (endDateTime.isAfter(conference.getStartDateTime()) && endDateTime.isBefore(conference.getEndDateTime())) {
                 return true;
-            } else return startDateTime.isEqual(conference.getStartDateTime()) || endDateTime.isEqual(conference.getEndDateTime());
+            } else
+                return startDateTime.isEqual(conference.getStartDateTime()) || endDateTime.isEqual(conference.getEndDateTime());
         });
     }
 }

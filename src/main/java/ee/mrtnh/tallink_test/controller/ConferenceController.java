@@ -3,7 +3,7 @@ package ee.mrtnh.tallink_test.controller;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import ee.mrtnh.tallink_test.model.Conference;
-import ee.mrtnh.tallink_test.service.ConferenceServiceImpl;
+import ee.mrtnh.tallink_test.service.implementation.ConferenceServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.DefaultMessageSourceResolvable;

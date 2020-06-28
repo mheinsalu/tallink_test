@@ -9,6 +9,7 @@ import ee.mrtnh.tallink_test.model.ConferenceRoom;
 import ee.mrtnh.tallink_test.model.Participant;
 import ee.mrtnh.tallink_test.repo.ConferenceRepository;
 import ee.mrtnh.tallink_test.repo.ParticipantRepository;
+import ee.mrtnh.tallink_test.service.implementation.ParticipantServiceImpl;
 import ee.mrtnh.tallink_test.util.RepoHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
