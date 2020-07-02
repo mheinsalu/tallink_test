@@ -9,6 +9,7 @@ import GroupIcon from "@material-ui/icons/Group";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import Select from 'react-select'
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -41,11 +42,12 @@ export default function AddParticipant() {
 
     const [fullName, setFullName] = React.useState("");
     const [dateOfBirth, setDateOfBirth] = React.useState("");
-    const [conferenceId, setConferenceId] = React.useState("");
+    const [conferenceOptions, setConferenceOptions] = React.useState([]);
+    const [selectedValue, setSelectedValue] = React.useState("");
 
     const handleFullNameChange = event => setFullName(event.target.value);
     const handleDateOfBirthChange = event => setDateOfBirth(event.target.value);
-    const handleConferenceIdChange = event => setConferenceId(event.target.value);
+    const handleSelectedValueChange = event => setSelectedValue(event.target.value);
 
     const [message, setMessage] = React.useState("Nothing saved in the session");
 
@@ -68,15 +70,28 @@ export default function AddParticipant() {
     }
 
     const handleSubmit = variables => {
-        const toInput = {name: fullName, dateOfBirth, conferenceId};
+        const toInput = {name: fullName, dateOfBirth, selectedValue};
         fetchFunc(toInput);
         setFullName("");
         setDateOfBirth("");
-        setConferenceId("");
+        setSelectedValue("");
     };
 
     if (firstLoad) {
+        fetchConferences();
         setLoad(false);
+    }
+
+    async function fetchConferences() {
+        let response = await fetch("/getAllConferences");
+        let body = await response.json();
+        let options = body.map(conference => {
+            let conferenceDesc = conference.name
+                + " in " + conference.conferenceRoom.name + " starting at " + conference.startDateTime ;
+            return {value: conference.id, label: conferenceDesc};
+        });
+        alert(JSON.stringify(body));
+        setConferenceOptions(options);
     }
 
     return (
@@ -111,6 +126,7 @@ export default function AddParticipant() {
                                 variant="outlined"
                                 type="date"
                                 format="dd/MM/yyyy"
+                                label="Date of birth"
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
@@ -118,24 +134,21 @@ export default function AddParticipant() {
                                 fullWidth
                                 value={dateOfBirth}
                                 id="dateOfBirth"
-                                label="Date of birth"
                                 onChange={handleDateOfBirthChange}
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField
-                                autoComplete="conferenceId"
-                                name="conferenceId"
-                                variant="outlined"
-                                required
-                                fullWidth
-                                value={conferenceId}
-                                id="conferenceId"
-                                label="Conference ID"
-                                onChange={handleConferenceIdChange}
-                            />
+                            <Select>
+                                placeholder={conferenceOptions[0]}
+                                value={selectedValue}
+                                options={conferenceOptions}
+                                onChange={handleSelectedValueChange}
+                            </Select>
                         </Grid>
                     </Grid>
+
+
+
                     <Button
                         // type="submit"
                         fullWidth
@@ -150,7 +163,12 @@ export default function AddParticipant() {
 
                     <Grid container justify="center">
                         <Grid item>
-                            <Link to="/viewParticipants">View Participants</Link>
+                            <Link className={classes.link} to="/">
+                                {" "}
+                                <Typography align="left" style={{margin: "10px"}}>
+                                    &#x2190; Head back Home
+                                </Typography>{" "}
+                            </Link>
                         </Grid>
                     </Grid>
                 </form>

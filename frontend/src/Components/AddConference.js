@@ -189,7 +189,12 @@ export default function AddConference() {
 
                     <Grid container justify="center">
                         <Grid item>
-                            <Link to="/viewConferences">View Conferences</Link>
+                            <Link className={classes.link} to="/">
+                                {" "}
+                                <Typography align="left" style={{margin: "10px"}}>
+                                    &#x2190; Head back Home
+                                </Typography>{" "}
+                            </Link>
                         </Grid>
                     </Grid>
                 </form>
