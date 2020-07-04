@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -7,8 +7,6 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Avatar from "@material-ui/core/Avatar";
-import GroupIcon from "@material-ui/icons/Group";
 import {Link} from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 
@@ -44,25 +42,21 @@ const useStyles = makeStyles(theme => ({
 export default function ViewConferences() {
     const classes = useStyles();
 
-    const [data, updateData] = React.useState([]);
-    const [firstLoad, setLoad] = React.useState(true);
+    const [items, setItems] = React.useState([]);
 
-    async function sampleFunc() {
-        let response = await fetch("/getAllConferences");
-        let body = await response.json();
-        updateData(body);
-    }
+    useEffect(() => {
+        fetchItems();
+    }, []);
 
-    if (firstLoad) {
-        sampleFunc();
-        setLoad(false);
+    const fetchItems = async () => {
+        const data = await fetch("/getAllConferences");
+        const items = await data.json();
+        setItems(items);
     }
 
     return (
         <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-                <GroupIcon/>
-            </Avatar>
+
             <Typography component="h1" variant="h5">
                 Conferences
             </Typography>
@@ -81,9 +75,13 @@ export default function ViewConferences() {
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data?.map(row => (
+                        {items.map(row => (
                             <TableRow key={row.id}>
-                                <TableCell align="center">{row.name}</TableCell>
+                                {/*`` works, '' and "" don't*/}
+                                <TableCell align="center">
+                                    <Link to={`/viewConferences/${row.id}`}
+                                          style={{color: "slateblue"}}>{row.name}</Link>
+                                </TableCell>
                                 <TableCell align="center">{row.startDateTime}</TableCell>
                                 <TableCell align="center">{row.endDateTime}</TableCell>
                                 <TableCell align="center">{row.conferenceRoom.id}</TableCell>
@@ -93,12 +91,6 @@ export default function ViewConferences() {
                 </Table>
             </TableContainer>
 
-            <Link className={classes.link} to="/">
-                {" "}
-                <Typography align="left" style={{margin: "10px"}}>
-                    &#x2190; Head back Home
-                </Typography>{" "}
-            </Link>
         </div>
     );
 }

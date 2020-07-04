@@ -21,19 +21,22 @@ TODO: should I set up test base with rooms and conferences?
 
 BindingResult handling in Controllers is duplicated code. Refactor?
 
+TODO: return JSON not string in controllers? return better message
+
 Some info level logs can (should?) be changed to debug
 
 Code checked with SpotBugs. Warning: Potential CRLF Injection for logs
 
 Frontend based on https://medium.com/@mukundmadhav/build-and-deploy-react-app-with-spring-boot-and-mysql-6f888eb0c600
-Code doesn't look particularly clean (repeating code, large functions).
 TODO: refactor fronted for cleaner code
-
-TODO: ViewConferences: make Conference selectable -> new page: conf, room, participants
 
 From assignment.txt:
 For	testing	RESTful	web	service	use	REST-assured	(https://code.google.com/p/rest-assured/)
 For	testing	User	Interface	use	SeleniumHQ	(http://docs.seleniumhq.org/)
 TODO: implement assignment testing recommendations
+
+IT would be better to send less data from frontend to API e.g. don't need to send conference.participants when removing participant
+
+
 
 

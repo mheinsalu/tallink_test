@@ -1,11 +1,8 @@
-import React from "react";
-import Avatar from "@material-ui/core/Avatar";
+import React, {useEffect} from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import {Link} from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
-import GroupIcon from "@material-ui/icons/Group";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
@@ -38,69 +35,67 @@ const useStyles = makeStyles(theme => ({
 
 export default function AddParticipant() {
     const classes = useStyles();
-    const [firstLoad, setLoad] = React.useState(true);
 
     const [fullName, setFullName] = React.useState("");
     const [dateOfBirth, setDateOfBirth] = React.useState("");
     const [conferenceOptions, setConferenceOptions] = React.useState([]);
     const [selectedValue, setSelectedValue] = React.useState("");
+    const [message, setMessage] = React.useState("Nothing saved in the session");
 
     const handleFullNameChange = event => setFullName(event.target.value);
     const handleDateOfBirthChange = event => setDateOfBirth(event.target.value);
-    const handleSelectedValueChange = event => setSelectedValue(event.target.value);
+    const handleSelectedValueChange = event => setSelectedValue(event.value);
 
-    const [message, setMessage] = React.useState("Nothing saved in the session");
+    useEffect(() => {
+        fetchConferences();
+    }, []);
 
-    async function fetchFunc(toInput) {
+    const fetchConferences = async () => {
+        const data = await fetch("/getAllConferences");
+        const items = await data.json();
+        let options = items.map(conference => ({label: conference.name, value: conference}));
+        setConferenceOptions(options);
+    }
+
+    async function sendJsonData(data) {
         const response = await fetch("/addParticipantToConference", {
-            method: "POST", // *GET, POST, PUT, DELETE, etc.
-            mode: "cors", // no-cors, *cors, same-origin
-            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: "same-origin", // include, *same-origin, omit
+            method: "POST",
             headers: {
                 "Content-Type": "application/json"
             },
-            redirect: "follow", // manual, *follow, error
-            referrerPolicy: "no-referrer", // no-referrer, *client
-            body: JSON.stringify(toInput) // body data type must match "Content-Type" header
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
         });
-        let body = await response.json();
-        console.log(body.id);
-        setMessage(body.id ? "Data successfully updated" : "Data update failed");
+        let body = await response.text();
+        setMessage(body);
     }
 
-    const handleSubmit = variables => {
-        const toInput = {name: fullName, dateOfBirth, selectedValue};
-        fetchFunc(toInput);
-        setFullName("");
-        setDateOfBirth("");
-        setSelectedValue("");
+    const handleSubmit = () => {
+        let convertedDate = convertDate(dateOfBirth);
+        const inputData = {participant: {fullName: fullName, dateOfBirth: convertedDate}, conference: selectedValue};
+        sendJsonData(inputData);
     };
 
-    if (firstLoad) {
-        fetchConferences();
-        setLoad(false);
-    }
-
-    async function fetchConferences() {
-        let response = await fetch("/getAllConferences");
-        let body = await response.json();
-        let options = body.map(conference => {
-            let conferenceDesc = conference.name
-                + " in " + conference.conferenceRoom.name + " starting at " + conference.startDateTime ;
-            return {value: conference.id, label: conferenceDesc};
-        });
-        alert(JSON.stringify(body));
-        setConferenceOptions(options);
+    function convertDate(date) {
+        let dateToConvert = new Date(date);
+        let day = dateToConvert.getDate();
+        if (day < 10) {
+            day = "0" + day;
+        }
+        let month = dateToConvert.getMonth() + 1;
+        if (month < 10) {
+            month = "0" + month;
+        }
+        let formatted_date = day + "-"
+            + month + "-"
+            + dateToConvert.getFullYear();
+        return formatted_date;
     }
 
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
             <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <GroupIcon/>
-                </Avatar>
+
                 <Typography component="h1" variant="h5">
                     Add Participant to Conference
                 </Typography>
@@ -113,7 +108,7 @@ export default function AddParticipant() {
                                 fullWidth
                                 id="fullName"
                                 value={fullName}
-                                label="Full name"
+                                label="Full Name"
                                 name="fullName"
                                 autoComplete="fullName"
                                 onChange={handleFullNameChange}
@@ -126,7 +121,7 @@ export default function AddParticipant() {
                                 variant="outlined"
                                 type="date"
                                 format="dd/MM/yyyy"
-                                label="Date of birth"
+                                label="Date of Birth"
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
@@ -138,19 +133,16 @@ export default function AddParticipant() {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <Select>
-                                placeholder={conferenceOptions[0]}
-                                value={selectedValue}
+                            <Select
+                                placeholder={"Select Conference *"}
+                                value={conferenceOptions.find(obj => obj.value === selectedValue)}
                                 options={conferenceOptions}
                                 onChange={handleSelectedValueChange}
-                            </Select>
+                            />
                         </Grid>
                     </Grid>
 
-
-
                     <Button
-                        // type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
@@ -161,16 +153,6 @@ export default function AddParticipant() {
                         Save
                     </Button>
 
-                    <Grid container justify="center">
-                        <Grid item>
-                            <Link className={classes.link} to="/">
-                                {" "}
-                                <Typography align="left" style={{margin: "10px"}}>
-                                    &#x2190; Head back Home
-                                </Typography>{" "}
-                            </Link>
-                        </Grid>
-                    </Grid>
                 </form>
                 <Typography style={{margin: 7}} variant="body1">
                     Status: {message}

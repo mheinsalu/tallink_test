@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {makeStyles} from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -7,9 +7,6 @@ import TableContainer from "@material-ui/core/TableContainer";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
-import Avatar from "@material-ui/core/Avatar";
-import GroupIcon from "@material-ui/icons/Group";
-import {Link} from "react-router-dom";
 import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(theme => ({
@@ -44,25 +41,21 @@ const useStyles = makeStyles(theme => ({
 export default function ViewConferenceRooms() {
     const classes = useStyles();
 
-    const [data, updateData] = React.useState([]);
-    const [firstLoad, setLoad] = React.useState(true);
+    const [items, setItems] = React.useState([]);
 
-    async function sampleFunc() {
-        let response = await fetch("/getAllConferenceRooms");
-        let body = await response.json();
-        updateData(body);
-    }
+    useEffect(() => {
+        fetchItems();
+    }, []);
 
-    if (firstLoad) {
-        sampleFunc();
-        setLoad(false);
+    const fetchItems = async () => {
+        const data = await fetch("/getAllConferenceRooms");
+        const items = await data.json();
+        setItems(items);
     }
 
     return (
         <div className={classes.paper}>
-            <Avatar className={classes.avatar}>
-                <GroupIcon/>
-            </Avatar>
+
             <Typography component="h1" variant="h5">
                 Conference Rooms
             </Typography>
@@ -77,26 +70,22 @@ export default function ViewConferenceRooms() {
                             <TableCell align="center">Name</TableCell>
                             <TableCell align="center">Location</TableCell>
                             <TableCell align="center">Max Seats</TableCell>
+                            <TableCell align="center">Room ID</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
-                        {data?.map(row => (
+                        {items.map(row => (
                             <TableRow key={row.id}>
                                 <TableCell align="center">{row.name}</TableCell>
                                 <TableCell align="center">{row.location}</TableCell>
                                 <TableCell align="center">{row.maxSeats}</TableCell>
+                                <TableCell align="center">{row.id}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
                 </Table>
             </TableContainer>
 
-            <Link className={classes.link} to="/">
-                {" "}
-                <Typography align="left" style={{margin: "10px"}}>
-                    &#x2190; Head back Home
-                </Typography>{" "}
-            </Link>
         </div>
     );
 }

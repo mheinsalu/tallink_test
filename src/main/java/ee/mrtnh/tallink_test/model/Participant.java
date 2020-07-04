@@ -42,7 +42,7 @@ public class Participant {
 
     @NotNull(message = "Participant must have date of birth")
     @Column(nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyy")
+    @JsonFormat(pattern = "dd-MM-yyyy")
     private LocalDate dateOfBirth;
 
     @ManyToMany(mappedBy = "participants")

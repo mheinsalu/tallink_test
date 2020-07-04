@@ -20,7 +20,7 @@ export default class Home extends Component {
             <div className="Home">
                 <div className="lander">
                     <h1>Tallink Test Assignment</h1>
-                    <p>Home Page</p>
+                    <a href={"/"} id="homePageLink">Home Page</a>
                     <form>
                         {this.addRedirectButton("Add Conference", "/addConference")}
                         {this.addRedirectButton("View Conferences", "/viewConferences")}

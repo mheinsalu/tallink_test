@@ -1,12 +1,10 @@
 import React, {useEffect} from "react";
+
 import {makeStyles} from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
 import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
+import Avatar from "@material-ui/core/Avatar";
+import GroupIcon from "@material-ui/icons/Group";
 import Typography from "@material-ui/core/Typography";
 
 const useStyles = makeStyles(theme => ({
@@ -38,50 +36,36 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-export default function ViewParticipants() {
-    const classes = useStyles();
-
+export default function TableWrapper(fetchUrl, tableName, table) {
     const [items, setItems] = React.useState([]);
+    const styleClasses = useStyles();
 
     useEffect(() => {
         fetchItems();
     }, []);
 
     const fetchItems = async () => {
-        const data = await fetch("/getAllParticipants");
+        const data = await fetch(fetchUrl);
         const items = await data.json();
+        console.log(items);
         setItems(items);
     }
 
     return (
-        <div className={classes.paper}>
-
+        <div className={styleClasses.paper}>
+            <Avatar className={styleClasses.avatar}>
+                <GroupIcon/>
+            </Avatar>
             <Typography component="h1" variant="h5">
-                Participants
+                {tableName}
             </Typography>
 
             <TableContainer
-                style={{width: "80%", margin: "10px 10px"}}
+                style={{width: "80%", margin: "0 10px"}}
                 component={Paper}
             >
-                <Table className={classes.table} aria-label="simple table">
-                    <TableHead>
-                        <TableRow style={{backgroundColor: "#F8F8F8"}}>
-                            <TableCell align="center">Name</TableCell>
-                            <TableCell align="center">Date of Birth</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {items.map(row => (
-                            <TableRow key={row.id}>
-                                <TableCell align="center">{row.fullName}</TableCell>
-                                <TableCell align="center">{row.dateOfBirth}</TableCell>
-                            </TableRow>
-                        ))}
-                    </TableBody>
-                </Table>
+                {table(items, styleClasses.table)}
             </TableContainer>
-
         </div>
     );
 }

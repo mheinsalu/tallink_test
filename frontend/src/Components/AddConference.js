@@ -1,14 +1,12 @@
-import React from "react";
-import Avatar from "@material-ui/core/Avatar";
+import React, {useEffect} from "react";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import TextField from "@material-ui/core/TextField";
-import {Link} from "react-router-dom";
 import Grid from "@material-ui/core/Grid";
-import GroupIcon from "@material-ui/icons/Group";
 import Typography from "@material-ui/core/Typography";
 import {makeStyles} from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import Select from "react-select";
 
 const useStyles = makeStyles(theme => ({
     paper: {
@@ -37,50 +35,50 @@ const useStyles = makeStyles(theme => ({
 
 export default function AddConference() {
     const classes = useStyles();
-    const [firstLoad, setLoad] = React.useState(true);
 
     const [name, setName] = React.useState("");
     const [startDateTime, setStartDateTime] = React.useState("");
     const [endDateTime, setEndDateTime] = React.useState("");
-    const [conferenceRoomId, setConferenceRoomId] = React.useState("");
+    const [conferenceRoomOptions, setConferenceRoomOptions] = React.useState([]);
+    const [selectedValue, setSelectedValue] = React.useState("");
+    const [message, setMessage] = React.useState("Nothing saved in the session");
 
     const handleNameChange = event => setName(event.target.value);
     const handleStartDateTimeChange = event => setStartDateTime(event.target.value);
     const handleEndDateTimeChange = event => setEndDateTime(event.target.value);
-    const handleConferenceRoomIdChange = event => setConferenceRoomId(event.target.value);
+    const handleSelectedValueChange = event => setSelectedValue(event.value);
 
-    const [message, setMessage] = React.useState("Nothing saved in the session");
+    useEffect(() => {
+        fetchConferenceRooms();
+    }, []);
 
-    async function fetchFunc(toInput) {
-        alert(JSON.stringify(toInput));
-        const response = await fetch("/addConference", {
-            method: "POST", // *GET, POST, PUT, DELETE, etc.
-            mode: "cors", // no-cors, *cors, same-origin
-            cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
-            credentials: "same-origin", // include, *same-origin, omit
-            headers: {
-                "Content-Type": "application/json"
-            },
-            redirect: "follow", // manual, *follow, error
-            referrerPolicy: "no-referrer", // no-referrer, *client
-            body: JSON.stringify(toInput) // body data type must match "Content-Type" header
-        });
-        let body = await response.json();
-        // console.log(body.id);
-        setMessage(body);
-        // setMessage(body.id ? "Data successfully updated" : "Data update failed");
+    const fetchConferenceRooms = async () => {
+        const data = await fetch("/getAllConferenceRooms");
+        const items = await data.json();
+        let options = items.map(conferenceRoom => ({label: conferenceRoom.name, value: conferenceRoom}));
+        setConferenceRoomOptions(options);
     }
 
-    const handleSubmit = variables => {
+    async function sendPostJson(data) {
+        const response = await fetch("/addConference", {
+            method: "POST",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify(data) // body data type must match "Content-Type" header
+        });
+        let body = await response.text();
+        setMessage(body);
+    }
+
+    const handleSubmit = () => {
         let convertedStartDateTime = convertDateTime(startDateTime);
         let convertedEndDateTime = convertDateTime(endDateTime);
-        let toInput = {name, "startDateTime": convertedStartDateTime, "endDateTime": convertedEndDateTime, conferenceRoomId};
-        fetchFunc(toInput);
-        // resets fields
-        /*setName("");
-        setStartDateAndTime("");
-        setEndDateAndTime("");
-        setConferenceRoomId("");*/
+        let toInput = {
+            name,
+            "startDateTime": convertedStartDateTime,
+            "endDateTime": convertedEndDateTime,
+            "conferenceRoom": selectedValue
+        };
+        sendPostJson(toInput);
     };
 
     function convertDateTime(dateTime) {
@@ -97,17 +95,11 @@ export default function AddConference() {
         return formattedDateTime;
     }
 
-    if (firstLoad) {
-        setLoad(false);
-    }
-
     return (
         <Container component="main" maxWidth="xs">
             <CssBaseline/>
             <div className={classes.paper}>
-                <Avatar className={classes.avatar}>
-                    <GroupIcon/>
-                </Avatar>
+
                 <Typography component="h1" variant="h5">
                     Add Conference
                 </Typography>
@@ -162,21 +154,15 @@ export default function AddConference() {
                             />
                         </Grid>
                         <Grid item xs={12}>
-                            <TextField
-                                variant="outlined"
-                                required
-                                fullWidth
-                                id="conferenceRoomId"
-                                value={conferenceRoomId}
-                                label="Conference room ID"
-                                name="conferenceRoomId"
-                                autoComplete="conferenceRoomId"
-                                onChange={handleConferenceRoomIdChange}
+                            <Select
+                                placeholder={"Select Conference Room *"}
+                                value={conferenceRoomOptions.find(obj => obj.value === selectedValue)}
+                                options={conferenceRoomOptions}
+                                onChange={handleSelectedValueChange}
                             />
                         </Grid>
                     </Grid>
                     <Button
-                        // type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
@@ -187,16 +173,6 @@ export default function AddConference() {
                         Save
                     </Button>
 
-                    <Grid container justify="center">
-                        <Grid item>
-                            <Link className={classes.link} to="/">
-                                {" "}
-                                <Typography align="left" style={{margin: "10px"}}>
-                                    &#x2190; Head back Home
-                                </Typography>{" "}
-                            </Link>
-                        </Grid>
-                    </Grid>
                 </form>
                 <Typography style={{margin: 7}} variant="body1">
                     Status: {message}

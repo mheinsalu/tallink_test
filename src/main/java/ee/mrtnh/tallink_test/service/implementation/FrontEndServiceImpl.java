@@ -12,10 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class FrontEndServiceImpl implements FrontEndService {
+
+    // TODO: tests
 
     @Autowired
     ConferenceRepository conferenceRepository;
@@ -32,6 +35,26 @@ public class FrontEndServiceImpl implements FrontEndService {
         List<Conference> conferences = conferenceRepository.findAll();
         log.info("Fetched {} Conferences from DB", conferences.size());
         return conferences;
+    }
+
+    @Override
+    public Conference getConferenceById(String conferenceId) {
+        log.info("Fetching Conference with ID {} from DB", conferenceId);
+        long id;
+        try {
+            id = Long.parseLong(conferenceId);
+        } catch (NumberFormatException e) {
+            String message = String.format("Could not parse conferenceId %s to Long", conferenceId);
+            log.error(message);
+            throw new IllegalArgumentException(message);
+        }
+        Optional<Conference> conference = conferenceRepository.findById(id);
+        if (conference.isPresent()) {
+            log.info("Fetched Conference with ID {} from DB", conferenceId);
+        } else {
+            log.error("Could not find Conference with ID {} in DB", conferenceId);
+        }
+        return conference.orElseThrow();
     }
 
     @Override

@@ -16,4 +16,5 @@ public interface FrontEndService {
 
     List<Participant> getAllParticipants();
 
+    Conference getConferenceById(String conferenceId);
 }

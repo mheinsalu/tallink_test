@@ -7,24 +7,30 @@ import AddParticipant from "./Components/AddParticipant";
 import ViewParticipants from "./Components/ViewParticipants";
 import ViewConferenceRooms from "./Components/ViewConferenceRooms";
 import Footer from "./Components/Footer";
+import ConferenceDetails from "./Components/ConferenceDetails";
 
 class App extends Component {
+
     render() {
         return (
-            <Router>
-                <div>
-                    <Route exact path="/" component={Home}/>
-                    <Route exact path="/addConference" component={AddConference}/>
-                    <Route exact path="/viewConferences" component={ViewConferences}/>
-                    <Route exact path="/addParticipant" component={AddParticipant}/>
-                    <Route exact path="/viewParticipants" component={ViewParticipants}/>
-                    <Route exact path="/viewConferenceRooms" component={ViewConferenceRooms}/>
+            <div>
+                <Home/>
 
-                    <Footer>
-                        Author: Märten Heinsalu. Date: 06.2020
-                    </Footer>
-                </div>
-            </Router>
+                <Router>
+                    <div>
+                        <Route exact path="/addConference" component={AddConference}/>
+                        <Route exact path="/viewConferences" component={ViewConferences}/>
+                        <Route exact path="/addParticipant" component={AddParticipant}/>
+                        <Route exact path="/viewParticipants" component={ViewParticipants}/>
+                        <Route exact path="/viewConferenceRooms" component={ViewConferenceRooms}/>
+                        <Route exact path="/viewConferences/:id" component={ConferenceDetails}/>
+                    </div>
+                </Router>
+
+                <Footer>
+                    Author: Märten Heinsalu. Date: 07.2020
+                </Footer>
+            </div>
         );
     }
 }

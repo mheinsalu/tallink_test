@@ -11,7 +11,11 @@
     color: slateblue;
 }
 
-.Home p {
+.Home form {
+    margin: 10px;
+}
+
+#homePageLink {
     font-family: Arial, serif;
-    color: green;
+    color: slategray;
 }

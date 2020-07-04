@@ -10,7 +10,10 @@ import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.stream.Collectors;
@@ -54,7 +57,7 @@ public class ConferenceController {
         return new ResponseEntity<>(resultMessage, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/checkConferenceSeatsAvailability", consumes = "application/json")
+    @PostMapping(value = "/checkConferenceSeatsAvailability", consumes = "application/json")
     public ResponseEntity<String> checkConferenceSeatsAvailability(@RequestBody @Valid Conference conference, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             log.error("Input constraint violation {}", bindingResult.getAllErrors());
