@@ -1,0 +1,1 @@
+tried to create generic Table class that could have viewConferences etc as children in order to reduce code duplication

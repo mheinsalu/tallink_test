@@ -28,7 +28,7 @@ Some info level logs can (should?) be changed to debug
 Code checked with SpotBugs. Warning: Potential CRLF Injection for logs
 
 Frontend based on https://medium.com/@mukundmadhav/build-and-deploy-react-app-with-spring-boot-and-mysql-6f888eb0c600
-TODO: refactor fronted for cleaner code
+TODO: refactor frontend for cleaner code
 
 From assignment.txt:
 For	testing	RESTful	web	service	use	REST-assured	(https://code.google.com/p/rest-assured/)
@@ -37,6 +37,6 @@ TODO: implement assignment testing recommendations
 
 IT would be better to send less data from frontend to API e.g. don't need to send conference.participants when removing participant
 
-
+TODO: frontend/js error jandling?
 
 

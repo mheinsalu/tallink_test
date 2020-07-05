@@ -5,12 +5,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 /**
  * @author Märten Heinsalu
- * date 06.2020
+ * date 07.2020
  */
 @SpringBootApplication
 public class TallinkTestApplication {
-
-    // TODO: test on external TC at work
 
     public static void main(String[] args) {
         SpringApplication.run(TallinkTestApplication.class, args);
