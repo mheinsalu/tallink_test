@@ -10,7 +10,7 @@
     </parent>
     <groupId>ee.mrtnh</groupId>
     <artifactId>tallink_test</artifactId>
-    <version>1.1</version>
+    <version>1.1.1</version>
     <packaging>war</packaging>
     <name>tallink_test</name>
     <description>Test task for Tallink</description>

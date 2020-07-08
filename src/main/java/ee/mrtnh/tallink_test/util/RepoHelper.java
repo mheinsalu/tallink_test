@@ -20,6 +20,7 @@ public class RepoHelper {
 
     public Conference findConference(Conference conference) {
         log.debug("Finding conference {}", conference);
+        // TODO: javax.persistence.NonUniqueResultException: query did not return a unique result if there are Conferences with same name and dates but different rooms.
         return conferenceRepository.findConferenceByNameAndStartDateTimeAndEndDateTime(
                 conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
     }

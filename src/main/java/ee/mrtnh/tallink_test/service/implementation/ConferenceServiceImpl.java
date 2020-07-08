@@ -26,11 +26,12 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     public String addConference(Conference conference) {
         log.info("Adding conference {}", conference);
-        if (repoHelper.findConference(conference) != null) {
+        Conference conferenceFromDb = repoHelper.findConference(conference);
+        ConferenceRoom roomFromDb = repoHelper.findConferenceRoom(conference.getConferenceRoom());
+        if (conferenceFromDb != null && conferenceFromDb.getConferenceRoom().getId() == roomFromDb.getId()) {
             log.warn("{} already exists", conference);
             throw new ConferenceAlreadyExistsException(conference);
         }
-        ConferenceRoom roomFromDb = repoHelper.findConferenceRoom(conference.getConferenceRoom());
         if (roomFromDb.isConferenceRoomBooked(conference.getStartDateTime(), conference.getEndDateTime())) {
             log.warn("{} is already booked in time period {} - {}",
                     roomFromDb, conference.getStartDateTime(), conference.getEndDateTime());

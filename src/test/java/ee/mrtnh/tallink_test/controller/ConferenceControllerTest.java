@@ -16,7 +16,8 @@ import java.time.LocalDateTime;
 import java.time.Month;
 
 import static org.mockito.Mockito.doReturn;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -92,7 +93,7 @@ class ConferenceControllerTest {
     @Test
     void checkConferenceSeatsAvailability_validJSon() throws Exception {
         doReturn("test message").when(conferenceService).checkConferenceSeatsAvailability(conference);
-        mockMvc.perform(get("/checkConferenceSeatsAvailability")
+        mockMvc.perform(post("/checkConferenceSeatsAvailability")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(validJson))
                 .andExpect(status().isOk());
@@ -101,7 +102,7 @@ class ConferenceControllerTest {
     @Test
     void checkConferenceSeatsAvailability_invalidJSon() throws Exception {
         doReturn("test message").when(conferenceService).checkConferenceSeatsAvailability(conference);
-        mockMvc.perform(get("/checkConferenceSeatsAvailability")
+        mockMvc.perform(post("/checkConferenceSeatsAvailability")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(""))
                 .andExpect(status().isBadRequest());

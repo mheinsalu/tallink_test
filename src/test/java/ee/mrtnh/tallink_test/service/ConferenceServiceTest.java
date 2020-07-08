@@ -51,6 +51,7 @@ class ConferenceServiceTest {
     @Test
     void addConference_alreadyExists() {
         doReturn(conference).when(repoHelper).findConference(conference);
+        doReturn(conference.getConferenceRoom()).when(repoHelper).findConferenceRoom(conference.getConferenceRoom());
 
         assertThrows(ConferenceAlreadyExistsException.class, () -> conferenceService.addConference(conference));
     }
