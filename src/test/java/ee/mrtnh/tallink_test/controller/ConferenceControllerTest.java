@@ -50,7 +50,7 @@ class ConferenceControllerTest {
         conference = new Conference("conferenceName", conferenceStartDateTime, conferenceEndDateTime);
         Integer maxCapacity = 5;
         ConferenceRoom conferenceRoom = new ConferenceRoom("testRoomName", "testRoomLocation", maxCapacity);
-        conference.setConferenceRoom(conferenceRoom);
+        conference.setConferenceRoomId(conferenceRoom.getId());
     }
 
     @Test

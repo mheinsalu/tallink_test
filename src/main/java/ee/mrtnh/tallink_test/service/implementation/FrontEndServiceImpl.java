@@ -7,12 +7,12 @@ import ee.mrtnh.tallink_test.repo.ConferenceRepository;
 import ee.mrtnh.tallink_test.repo.ConferenceRoomRepository;
 import ee.mrtnh.tallink_test.repo.ParticipantRepository;
 import ee.mrtnh.tallink_test.service.FrontEndService;
+import ee.mrtnh.tallink_test.util.RepoHelper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @Slf4j
@@ -29,6 +29,9 @@ public class FrontEndServiceImpl implements FrontEndService {
     @Autowired
     ParticipantRepository participantRepository;
 
+    @Autowired
+    RepoHelper repoHelper;
+
     @Override
     public List<Conference> getAllConferences() {
         log.info("Fetching Conferences from DB");
@@ -40,21 +43,19 @@ public class FrontEndServiceImpl implements FrontEndService {
     @Override
     public Conference getConferenceById(String conferenceId) {
         log.info("Fetching Conference with ID {} from DB", conferenceId);
-        long id;
+        Long id = parseConferenceIdStringToLong(conferenceId);
+
+        return repoHelper.findConferenceById(id);
+    }
+
+    private Long parseConferenceIdStringToLong(String conferenceId) {
         try {
-            id = Long.parseLong(conferenceId);
+            return Long.parseLong(conferenceId);
         } catch (NumberFormatException e) {
             String message = String.format("Could not parse conferenceId %s to Long", conferenceId);
             log.error(message);
             throw new IllegalArgumentException(message);
         }
-        Optional<Conference> conference = conferenceRepository.findById(id);
-        if (conference.isPresent()) {
-            log.info("Fetched Conference with ID {} from DB", conferenceId);
-        } else {
-            log.error("Could not find Conference with ID {} in DB", conferenceId);
-        }
-        return conference.orElseThrow();
     }
 
     @Override

@@ -12,8 +12,6 @@ removeParticipant: should Participant be removed from Participant table if they 
 
 Tests: no need to test/check if conference room exists when adding conference because the selection of rooms available to user in UI is fetched from DB
 
-TODO: It would be better to move findExistingConference from serviceImpls to RepoHelper but I don't have time to rewrite tests
-
 Testing RepoHelper would be testing JpaRepository interface. Is this best practice?
 https://www.infoworld.com/article/3543268/junit-5-tutorial-part-2-unit-testing-spring-mvc-with-junit-5.html?page=4
 

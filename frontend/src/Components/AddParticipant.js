@@ -40,7 +40,7 @@ export default function AddParticipant() {
     const [dateOfBirth, setDateOfBirth] = React.useState("");
     const [conferenceOptions, setConferenceOptions] = React.useState([]);
     const [selectedValue, setSelectedValue] = React.useState("");
-    const [message, setMessage] = React.useState("Nothing saved in the session");
+    const [message, setMessage] = React.useState("Nothing saved in this session");
 
     const handleFullNameChange = event => setFullName(event.target.value);
     const handleDateOfBirthChange = event => setDateOfBirth(event.target.value);
@@ -71,7 +71,7 @@ export default function AddParticipant() {
 
     const handleSubmit = () => {
         let convertedDate = convertDate(dateOfBirth);
-        const inputData = {participant: {fullName: fullName, dateOfBirth: convertedDate}, conference: selectedValue};
+        const inputData = {participant: {fullName: fullName, dateOfBirth: convertedDate}, conferenceId: selectedValue.id};
         sendJsonData(inputData);
     };
 

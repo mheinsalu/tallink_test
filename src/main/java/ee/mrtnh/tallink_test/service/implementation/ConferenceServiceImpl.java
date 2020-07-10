@@ -1,7 +1,6 @@
 package ee.mrtnh.tallink_test.service.implementation;
 
 import ee.mrtnh.tallink_test.exception.ConferenceAlreadyExistsException;
-import ee.mrtnh.tallink_test.exception.ConferenceNotFoundException;
 import ee.mrtnh.tallink_test.exception.ConferenceRoomBookedException;
 import ee.mrtnh.tallink_test.model.Conference;
 import ee.mrtnh.tallink_test.model.ConferenceRoom;
@@ -26,18 +25,16 @@ public class ConferenceServiceImpl implements ConferenceService {
 
     public String addConference(Conference conference) {
         log.info("Adding conference {}", conference);
-        Conference conferenceFromDb = repoHelper.findConference(conference);
-        ConferenceRoom roomFromDb = repoHelper.findConferenceRoom(conference.getConferenceRoom());
-        if (conferenceFromDb != null && conferenceFromDb.getConferenceRoom().getId() == roomFromDb.getId()) {
+        if (repoHelper.findConference(conference) != null) {
             log.warn("{} already exists", conference);
             throw new ConferenceAlreadyExistsException(conference);
         }
+        ConferenceRoom roomFromDb = repoHelper.findConferenceRoomById(conference.getConferenceRoomId());
         if (roomFromDb.isConferenceRoomBooked(conference.getStartDateTime(), conference.getEndDateTime())) {
             log.warn("{} is already booked in time period {} - {}",
                     roomFromDb, conference.getStartDateTime(), conference.getEndDateTime());
-            throw new ConferenceRoomBookedException(roomFromDb);
+            throw new ConferenceRoomBookedException(roomFromDb.getId());
         }
-        conference.setConferenceRoom(roomFromDb);
 
         Conference savedConference = conferenceRepository.save(conference);
         String returnMessage = String.format("Added/saved to db conference %s", savedConference);
@@ -46,32 +43,21 @@ public class ConferenceServiceImpl implements ConferenceService {
         return returnMessage;
     }
 
-    public String cancelConference(Conference conference) {
-        log.info("Cancelling conference {}", conference);
-        Conference savedConference = findExistingConference(conference);
+    public String cancelConference(Long conferenceId) {
+        log.info("Cancelling conference with ID {}", conferenceId);
+        Conference savedConference = repoHelper.findConferenceById(conferenceId); // TODO: is this check needed? UI displays Conferences fetched from DB
         conferenceRepository.deleteById(savedConference.getId());
-        String returnMessage = String.format("Cancelled conference %s", conference);
+        String returnMessage = String.format("Cancelled conference with ID %s", conferenceId);
         log.info(returnMessage);
         return returnMessage;
     }
 
-    public String checkConferenceSeatsAvailability(Conference conference) {
-        log.info("Checking whether there are available seats in conference {}", conference);
-        Conference savedConference = findExistingConference(conference);
-        Integer availableSeats = savedConference.getAvailableRoomCapacity();
+    public String checkConferenceSeatsAvailability(Long conferenceId) {
+        log.info("Checking whether there are available seats in conference with ID {}", conferenceId);
+        Integer availableSeats = repoHelper.getAvailableRoomCapacity(conferenceId);
 
-        String returnMessage = String.format("There are %d available seats in conference %s", availableSeats, conference);
+        String returnMessage = String.format("There are %d available seats in conference with ID %s", availableSeats, conferenceId);
         log.info(returnMessage);
         return returnMessage;
     }
-
-    private Conference findExistingConference(Conference conference) {
-        Conference savedConference = repoHelper.findConference(conference);
-        if (savedConference == null) {
-            log.warn("{} doesn't exist", conference);
-            throw new ConferenceNotFoundException(conference);
-        }
-        return savedConference;
-    }
-
 }

@@ -40,7 +40,7 @@ export default function ConferenceDetails({match}) {
 
     const [conference, setConference] = React.useState("");
     const [conferenceParticipants, setConferenceParticipants] = React.useState([]);
-    const [message, setMessage] = React.useState("Nothing done in the session");
+    const [message, setMessage] = React.useState("Nothing done in this session");
     const [conferenceDetailsTableRow, setConferenceDetailsTableRow] = React.useState("");
 
     useEffect(() => {
@@ -58,10 +58,11 @@ export default function ConferenceDetails({match}) {
     const createConferenceDetailsRow = (conference) => {
         return (
             <TableRow style={{backgroundColor: "#F8F8F8"}}>
+                <TableCell align="center">{conference.id}</TableCell>
                 <TableCell align="center">{conference.name}</TableCell>
                 <TableCell align="center">{conference.startDateTime}</TableCell>
                 <TableCell align="center">{conference.endDateTime}</TableCell>
-                <TableCell align="center">{conference.conferenceRoom.id}</TableCell>
+                <TableCell align="center">{conference.conferenceRoomId}</TableCell>
                 <TableCell align="center">
                     <Button
                         className="RedirectButton"
@@ -95,7 +96,7 @@ export default function ConferenceDetails({match}) {
     }
 
     const removeParticipant = async (participant) => {
-        const dataToSend = {participant: participant, conference}
+        const dataToSend = {participant: participant, conferenceId: conference.id}
         sendJson(dataToSend, "/removeParticipantFromConference", "DELETE");
 
         let index = conferenceParticipants.indexOf(participant);
@@ -129,6 +130,7 @@ export default function ConferenceDetails({match}) {
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
                         <TableRow style={{backgroundColor: "#F8F8F8"}}>
+                            <TableCell align="center">ID</TableCell>
                             <TableCell align="center">Name</TableCell>
                             <TableCell align="center">Start Date and Time</TableCell>
                             <TableCell align="center">End Date and Time</TableCell>
@@ -153,6 +155,7 @@ export default function ConferenceDetails({match}) {
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
                         <TableRow style={{backgroundColor: "#F8F8F8"}}>
+                            <TableCell align="center">ID</TableCell>
                             <TableCell align="center">Name</TableCell>
                             <TableCell align="center">Date of Birth</TableCell>
                             <TableCell align="center">Remove from Conference</TableCell>
@@ -161,6 +164,7 @@ export default function ConferenceDetails({match}) {
                     <TableBody>
                         {conferenceParticipants.map(participant => (
                             <TableRow key={participant.id}>
+                                <TableCell align="center">{participant.id}</TableCell>
                                 <TableCell align="center">{participant.fullName}</TableCell>
                                 <TableCell align="center">{participant.dateOfBirth}</TableCell>
                                 <TableCell align="center">

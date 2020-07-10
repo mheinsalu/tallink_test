@@ -1,7 +1,6 @@
 package ee.mrtnh.tallink_test.service.implementation;
 
 import ee.mrtnh.tallink_test.exception.ConferenceCapacityFilledException;
-import ee.mrtnh.tallink_test.exception.ConferenceNotFoundException;
 import ee.mrtnh.tallink_test.exception.ParticipantAlreadyRegisteredException;
 import ee.mrtnh.tallink_test.exception.ParticipantNotRegisteredException;
 import ee.mrtnh.tallink_test.model.Conference;
@@ -29,12 +28,11 @@ public class ParticipantServiceImpl implements ParticipantService {
     @Autowired
     ParticipantRepository participantRepository;
 
-    public String addParticipantToConference(Participant participant, Conference conference) {
-
-        Conference conferenceFromDb = findExistingConference(conference);
-        if (conferenceFromDb.getAvailableRoomCapacity() == 0) {
+    public String addParticipantToConference(Participant participant, Long conferenceId) {
+        Conference conferenceFromDb = repoHelper.findConferenceById(conferenceId);
+        if (repoHelper.getAvailableRoomCapacity(conferenceFromDb.getId()) == 0) {
             log.warn("{} has no available seats", conferenceFromDb);
-            throw new ConferenceCapacityFilledException(conferenceFromDb);
+            throw new ConferenceCapacityFilledException(conferenceId);
         }
         if (conferenceFromDb.addParticipant(participant)) {
             participantRepository.save(participant);
@@ -44,26 +42,18 @@ public class ParticipantServiceImpl implements ParticipantService {
             return message;
         }
         log.warn("{} is already registered to {}", participant, conferenceFromDb);
-        throw new ParticipantAlreadyRegisteredException(participant, conferenceFromDb);
+        throw new ParticipantAlreadyRegisteredException(participant, conferenceId);
     }
 
-    public String removeParticipantFromConference(Participant participant, Conference conference) {
-        Conference conferenceFromDb = findExistingConference(conference);
-        if (conferenceFromDb.removeParticipant(participant)) {
-            String message = String.format("Removed %s from %s", participant, conferenceFromDb);
+    public String removeParticipantFromConference(Long participantId, Long conferenceId) {
+        Conference conferenceFromDb = repoHelper.findConferenceById(conferenceId);
+
+        if (conferenceFromDb.removeParticipantById(participantId)) {
+            String message = String.format("Removed Participant with ID %s from %s", participantId, conferenceFromDb);
             log.info(message);
             return message;
         }
-        log.warn("Unable to remove {} from {}. Participant is not registered", participant, conferenceFromDb);
-        throw new ParticipantNotRegisteredException(participant, conferenceFromDb);
-    }
-
-    private Conference findExistingConference(Conference conference) {
-        Conference savedConference = repoHelper.findConference(conference);
-        if (savedConference == null) {
-            log.warn("{} doesn't exist", conference);
-            throw new ConferenceNotFoundException(conference);
-        }
-        return savedConference;
+        log.warn("Unable to remove Participant with ID {} from {}. Participant is not registered", participantId, conferenceFromDb);
+        throw new ParticipantNotRegisteredException(participantId, conferenceId);
     }
 }

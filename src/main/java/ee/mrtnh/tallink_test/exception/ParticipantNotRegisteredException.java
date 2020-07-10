@@ -1,11 +1,8 @@
 package ee.mrtnh.tallink_test.exception;
 
-import ee.mrtnh.tallink_test.model.Conference;
-import ee.mrtnh.tallink_test.model.Participant;
-
 public class ParticipantNotRegisteredException extends RuntimeException {
 
-    public ParticipantNotRegisteredException(Participant participant, Conference conference) {
-        super("Participant " + participant + " is not registered to conference " + conference);
+    public ParticipantNotRegisteredException(Long participantId, Long conferenceId) {
+        super("Participant with ID " + participantId + " is not registered to conference with ID " + conferenceId);
     }
 }

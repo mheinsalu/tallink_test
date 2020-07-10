@@ -46,8 +46,9 @@ public class ConferenceRoom {
     private Integer maxSeats;
 
     @OneToMany(
-            mappedBy = "conferenceRoom",
-            orphanRemoval = true)
+            mappedBy = "conferenceRoomId",
+            orphanRemoval = true,
+            fetch = FetchType.LAZY)
     @ToString.Exclude
     @EqualsAndHashCode.Exclude // including this would cause infinite referential loop (conference<->conferenceRoom)
     @JsonIgnore // Without this an infinite loop occurs when Serializing

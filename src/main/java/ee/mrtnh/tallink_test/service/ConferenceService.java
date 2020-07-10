@@ -8,8 +8,8 @@ public interface ConferenceService {
 
     String addConference(Conference conference);
 
-    String cancelConference(Conference conference);
+    String cancelConference(Long conferenceId);
 
-    String checkConferenceSeatsAvailability(Conference conference);
+    String checkConferenceSeatsAvailability(Long conferenceId);
 
 }

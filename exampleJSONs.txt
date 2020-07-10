@@ -1,13 +1,28 @@
+
 http://localhost:8080/addConference
 {
     "name": "testConferenceName",
     "startDateTime": "10-06-2020 10:10",
     "endDateTime": "10-06-2020 11:15",
-    "conferenceRoom": {
-        "name": "ConferenceRoom_1",
-        "location": "Location_1",
-        "maxSeats": 5
-    }
+    "conferenceRoomId": 1
+}
+
+http://localhost:8080/cancelConference
+{
+    "id": 1,
+    "name": "testConferenceName",
+    "startDateTime": "10-06-2020 10:10",
+    "endDateTime": "10-06-2020 11:15",
+    "conferenceRoomId": 1
+}
+
+http://localhost:8080/checkConferenceSeatsAvailability
+{
+    "id": 1,
+    "name": "testConferenceName",
+    "startDateTime": "10-06-2020 10:10",
+    "endDateTime": "10-06-2020 11:15",
+    "conferenceRoomId": 1
 }
 
 http://localhost:8080/addParticipantToConference
@@ -16,14 +31,14 @@ http://localhost:8080/addParticipantToConference
         "fullName": "FirstName LastName",
         "dateOfBirth": "10-06-2020"
     },
-    "conference": {
-    "name": "testConferenceName",
-    "startDateTime": "10-06-2020 10:10",
-    "endDateTime": "10-06-2020 11:15",
-        "conferenceRoom": {
-            "name": "ConferenceRoom_1",
-            "location": "Location_1",
-            "maxSeats": 5
-        }
-    }
+    "conferenceId": 1
+}
+
+http://localhost:8080/removeParticipantFromConference
+{
+    "participant": {
+        "fullName": "FirstName LastName",
+        "dateOfBirth": "10-06-2020"
+    },
+    "conferenceId": 1
 }

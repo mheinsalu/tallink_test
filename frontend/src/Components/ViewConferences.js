@@ -68,6 +68,7 @@ export default function ViewConferences() {
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
                         <TableRow style={{backgroundColor: "#F8F8F8"}}>
+                            <TableCell align="center">ID</TableCell>
                             <TableCell align="center">Name</TableCell>
                             <TableCell align="center">Start Date and Time</TableCell>
                             <TableCell align="center">End Date and Time</TableCell>
@@ -77,6 +78,8 @@ export default function ViewConferences() {
                     <TableBody>
                         {items.map(row => (
                             <TableRow key={row.id}>
+
+                                <TableCell align="center">{row.id}</TableCell>
                                 {/*`` works, '' and "" don't*/}
                                 <TableCell align="center">
                                     <Link to={`/viewConferences/${row.id}`}
@@ -84,7 +87,7 @@ export default function ViewConferences() {
                                 </TableCell>
                                 <TableCell align="center">{row.startDateTime}</TableCell>
                                 <TableCell align="center">{row.endDateTime}</TableCell>
-                                <TableCell align="center">{row.conferenceRoom.id}</TableCell>
+                                <TableCell align="center">{row.conferenceRoomId}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>
