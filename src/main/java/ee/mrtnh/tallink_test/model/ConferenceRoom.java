@@ -63,4 +63,5 @@ public class ConferenceRoom {
                 return startDateTime.isEqual(conference.getStartDateTime()) || endDateTime.isEqual(conference.getEndDateTime());
         });
     }
+
 }
