@@ -37,11 +37,10 @@ public class ParticipantServiceImpl implements ParticipantService {
         if (conferenceFromDb.addParticipant(participant)) {
             participantRepository.save(participant);
             conferenceRepository.save(conferenceFromDb);
-            String message = String.format("%s added to %s", participant, conferenceFromDb);
-            log.info(message);
-            return message;
+            log.info("{} added to {}", participant, conferenceFromDb);
+            return String.format("Participant with ID %s added to conference with ID %s", participant.getId(), conferenceFromDb.getId());
         }
-        log.warn("{} is already registered to {}", participant, conferenceFromDb);
+        log.warn("Participant with ID {} is already registered to Conference with ID {}", participant.getId(), conferenceFromDb.getId());
         throw new ParticipantAlreadyRegisteredException(participant, conferenceId);
     }
 
@@ -49,11 +48,11 @@ public class ParticipantServiceImpl implements ParticipantService {
         Conference conferenceFromDb = repoHelper.findConferenceById(conferenceId);
 
         if (conferenceFromDb.removeParticipantById(participantId)) {
-            String message = String.format("Removed Participant with ID %s from %s", participantId, conferenceFromDb);
+            String message = String.format("Removed Participant with ID %s from conference with ID %s", participantId, conferenceFromDb.getId());
             log.info(message);
             return message;
         }
-        log.warn("Unable to remove Participant with ID {} from {}. Participant is not registered", participantId, conferenceFromDb);
+        log.warn("Unable to remove Participant with ID {} from conference with ID {}. Participant is not registered", participantId, conferenceFromDb.getId());
         throw new ParticipantNotRegisteredException(participantId, conferenceId);
     }
 }

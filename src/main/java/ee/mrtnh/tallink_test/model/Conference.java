@@ -50,9 +50,10 @@ public class Conference {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime startDateTime;
 
+    // TODO: haven't found way of tying this to ConferenceRoom table with @ManyToOne
     @NotNull(message = "Conference must have ending date and time")
     @Column(nullable = false)
-    @JsonFormat(pattern = "dd-MM-yyyy HH:mm") // TODO: how to check that start<end in JSON des?
+    @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime endDateTime;
 
     @NotNull(message = "Conference must have Conference Room ID")
@@ -60,7 +61,6 @@ public class Conference {
     @Column(nullable = false)
     private Long conferenceRoomId;
 
-    // TODO: needed here? replace with helper method?
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(name = "CONFERENCE_PARTICIPANTS",
             joinColumns = @JoinColumn(name = "CONFERENCE_ID"),
@@ -73,7 +73,7 @@ public class Conference {
     }
 
     public boolean removeParticipantById(long participantId) {
-        return participants.removeIf(participant -> participant.getId()==(participantId));
+        return participants.removeIf(participant -> participant.getId() == (participantId));
     }
 
 }

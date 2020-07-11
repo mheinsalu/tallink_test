@@ -18,8 +18,6 @@ import java.util.List;
 @Slf4j
 public class FrontEndServiceImpl implements FrontEndService {
 
-    // TODO: tests
-
     @Autowired
     ConferenceRepository conferenceRepository;
 
@@ -44,13 +42,13 @@ public class FrontEndServiceImpl implements FrontEndService {
     public Conference getConferenceById(String conferenceId) {
         log.info("Fetching Conference with ID {} from DB", conferenceId);
         Long id = parseConferenceIdStringToLong(conferenceId);
-
+        log.info("Fetched Conference with ID {} from DB", conferenceId);
         return repoHelper.findConferenceById(id);
     }
 
     private Long parseConferenceIdStringToLong(String conferenceId) {
         try {
-            return Long.parseLong(conferenceId);
+            return Long.valueOf(conferenceId);
         } catch (NumberFormatException e) {
             String message = String.format("Could not parse conferenceId %s to Long", conferenceId);
             log.error(message);

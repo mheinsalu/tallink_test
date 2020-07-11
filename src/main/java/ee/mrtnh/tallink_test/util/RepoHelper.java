@@ -16,8 +16,6 @@ import java.util.Optional;
 @Slf4j
 public class RepoHelper {
 
-    // TODO: tests
-
     @Autowired
     private ConferenceRepository conferenceRepository;
 

@@ -27,7 +27,7 @@ public class ConferenceServiceImpl implements ConferenceService {
         log.info("Adding conference {}", conference);
         if (repoHelper.findConference(conference) != null) {
             log.warn("{} already exists", conference);
-            throw new ConferenceAlreadyExistsException(conference);
+            throw new ConferenceAlreadyExistsException();
         }
         ConferenceRoom roomFromDb = repoHelper.findConferenceRoomById(conference.getConferenceRoomId());
         if (roomFromDb.isConferenceRoomBooked(conference.getStartDateTime(), conference.getEndDateTime())) {
@@ -37,19 +37,18 @@ public class ConferenceServiceImpl implements ConferenceService {
         }
 
         Conference savedConference = conferenceRepository.save(conference);
-        String returnMessage = String.format("Added/saved to db conference %s", savedConference);
-        log.info(returnMessage);
+        log.info("Added/saved to db conference {}", savedConference);
 
-        return returnMessage;
+        return String.format("Added/saved conference with ID %s to db", savedConference.getId());
     }
 
     public String cancelConference(Long conferenceId) {
         log.info("Cancelling conference with ID {}", conferenceId);
         Conference savedConference = repoHelper.findConferenceById(conferenceId); // TODO: is this check needed? UI displays Conferences fetched from DB
         conferenceRepository.deleteById(savedConference.getId());
-        String returnMessage = String.format("Cancelled conference with ID %s", conferenceId);
-        log.info(returnMessage);
-        return returnMessage;
+
+        log.info("Cancelled conference {}", savedConference);
+        return String.format("Cancelled conference with ID %s", conferenceId);
     }
 
     public String checkConferenceSeatsAvailability(Long conferenceId) {
