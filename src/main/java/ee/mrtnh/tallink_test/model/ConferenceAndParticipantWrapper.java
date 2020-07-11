@@ -8,7 +8,7 @@ import javax.validation.Valid;
 public class ConferenceAndParticipantWrapper {
 
     @Valid
-    private Conference conference;
+    private long conferenceId;
 
     @Valid
     private Participant participant;

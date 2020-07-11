@@ -1,13 +1,11 @@
-package ee.mrtnh.tallink_test.service;
+package ee.mrtnh.tallink_test.service.implementation;
 
 import ee.mrtnh.tallink_test.exception.ConferenceAlreadyExistsException;
 import ee.mrtnh.tallink_test.exception.ConferenceNotFoundException;
 import ee.mrtnh.tallink_test.exception.ConferenceRoomBookedException;
 import ee.mrtnh.tallink_test.model.Conference;
 import ee.mrtnh.tallink_test.model.ConferenceRoom;
-import ee.mrtnh.tallink_test.model.Participant;
 import ee.mrtnh.tallink_test.repo.ConferenceRepository;
-import ee.mrtnh.tallink_test.service.implementation.ConferenceServiceImpl;
 import ee.mrtnh.tallink_test.util.RepoHelper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -16,16 +14,16 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.doThrow;
 
 @ExtendWith(MockitoExtension.class)
-class ConferenceServiceTest {
+class ConferenceServiceImplTest {
 
     @Mock
     private ConferenceRepository conferenceRepository;
@@ -37,21 +35,23 @@ class ConferenceServiceTest {
     private ConferenceServiceImpl conferenceService;
 
     private Conference conference;
+    private ConferenceRoom conferenceRoom;
 
     @BeforeEach
     void setUp() {
         LocalDateTime conferenceStartDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 10, 15);
         LocalDateTime conferenceEndDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 11, 15);
         conference = new Conference("conferenceName", conferenceStartDateTime, conferenceEndDateTime);
+        conference.setConferenceRoomId(1L);
+
         Integer maxCapacity = 5;
-        ConferenceRoom conferenceRoom = new ConferenceRoom("testRoomName", "testRoomLocation", maxCapacity);
-        conference.setConferenceRoom(conferenceRoom);
+        conferenceRoom = new ConferenceRoom("testRoomName", "testRoomLocation", maxCapacity);
+        conferenceRoom.setId(1L);
     }
 
     @Test
     void addConference_alreadyExists() {
         doReturn(conference).when(repoHelper).findConference(conference);
-        doReturn(conference.getConferenceRoom()).when(repoHelper).findConferenceRoom(conference.getConferenceRoom());
 
         assertThrows(ConferenceAlreadyExistsException.class, () -> conferenceService.addConference(conference));
     }
@@ -61,57 +61,42 @@ class ConferenceServiceTest {
         LocalDateTime conferenceStartDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 10, 0);
         LocalDateTime conferenceEndDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 11, 0);
         Conference conflictingConference = new Conference("conflictingConference", conferenceStartDateTime, conferenceEndDateTime);
-        conflictingConference.setConferenceRoom(conference.getConferenceRoom());
-        doReturn(null).when(repoHelper).findConference(conflictingConference);
+        conflictingConference.setConferenceRoomId(conference.getConferenceRoomId());
+        conferenceRoom.getConferences().add(conflictingConference);
 
-        conference.getConferenceRoom().getConferences().add(conference);
-        doReturn(conference.getConferenceRoom()).when(repoHelper).findConferenceRoom(conflictingConference.getConferenceRoom());
+        doReturn(null).when(repoHelper).findConference(conference);
+        doReturn(conferenceRoom).when(repoHelper).findConferenceRoomById(conference.getConferenceRoomId());
 
-        assertThrows(ConferenceRoomBookedException.class, () -> conferenceService.addConference(conflictingConference));
+        assertThrows(ConferenceRoomBookedException.class, () -> conferenceService.addConference(conference));
     }
 
     @Test
     void addConference_success() {
         doReturn(null).when(repoHelper).findConference(conference);
-        doReturn(conference.getConferenceRoom()).when(repoHelper).findConferenceRoom(conference.getConferenceRoom());
+        doReturn(conferenceRoom).when(repoHelper).findConferenceRoomById(conference.getConferenceRoomId());
+        doReturn(conference).when(conferenceRepository).save(conference);
 
         assertDoesNotThrow(() -> conferenceService.addConference(conference));
     }
 
     @Test
     void cancelConference_conferenceDoesntExist() {
-        doReturn(null).when(repoHelper).findConference(conference);
+        doThrow(ConferenceNotFoundException.class).when(repoHelper).findConferenceById(conference.getId());
 
-        assertThrows(ConferenceNotFoundException.class, () -> conferenceService.cancelConference(conference));
+        assertThrows(ConferenceNotFoundException.class, () -> conferenceService.cancelConference(conference.getId()));
     }
 
     @Test
     void cancelConference_success() {
-        doReturn(conference).when(repoHelper).findConference(conference);
+        doReturn(conference).when(repoHelper).findConferenceById(conference.getId());
 
-        assertDoesNotThrow(() -> conferenceService.cancelConference(conference));
-    }
-
-    @Test
-    void checkConferenceRoomAvailability_conferenceDoesntExist() {
-        doReturn(null).when(repoHelper).findConference(conference);
-
-        assertThrows(ConferenceNotFoundException.class, () -> conferenceService.checkConferenceSeatsAvailability(conference));
+        assertDoesNotThrow(() -> conferenceService.cancelConference(conference.getId()));
     }
 
     @Test
     void checkConferenceRoomAvailability_success() {
-        doReturn(conference).when(repoHelper).findConference(conference);
+        doReturn(1).when(repoHelper).getAvailableRoomCapacity(conference.getId());
 
-        LocalDate dateOfBirth = LocalDate.of(2020, Month.JUNE, 20);
-        conference.getParticipants().add(new Participant("FirstName_1 LastName_1", dateOfBirth));
-        conference.getParticipants().add(new Participant("FirstName_2 LastName_2", dateOfBirth));
-        conference.getParticipants().add(new Participant("FirstName_3 LastName_3", dateOfBirth));
-        conference.getParticipants().add(new Participant("FirstName_4 LastName_4", dateOfBirth));
-        conference.getParticipants().add(new Participant("FirstName_5 LastName_5", dateOfBirth));
-
-        assertDoesNotThrow(() -> conferenceService.checkConferenceSeatsAvailability(conference));
+        assertDoesNotThrow(() -> conferenceService.checkConferenceSeatsAvailability(conference.getId()));
     }
-
-
 }

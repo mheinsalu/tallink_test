@@ -1,7 +1,6 @@
 package ee.mrtnh.tallink_test.controller;
 
 import ee.mrtnh.tallink_test.model.Conference;
-import ee.mrtnh.tallink_test.model.ConferenceRoom;
 import ee.mrtnh.tallink_test.model.Participant;
 import ee.mrtnh.tallink_test.service.implementation.ParticipantServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -40,16 +39,7 @@ class ParticipantControllerTest {
             "        \"fullName\": \"FirstName LastName\",\n" +
             "        \"dateOfBirth\": \"10-06-2020\"\n" +
             "    },\n" +
-            "    \"conference\": {\n" +
-            "    \"name\": \"testConferenceName\",\n" +
-            "    \"startDateTime\": \"10-06-2020 10:10\",\n" +
-            "    \"endDateTime\": \"10-06-2020 11:15\",\n" +
-            "        \"conferenceRoom\": {\n" +
-            "            \"name\": \"ConferenceRoom_1\",\n" +
-            "            \"location\": \"Location_1\",\n" +
-            "            \"maxSeats\": 5\n" +
-            "        }\n" +
-            "    }\n" +
+            "    \"conferenceId\": 1 \n" +
             "}";
 
     @BeforeEach
@@ -57,9 +47,8 @@ class ParticipantControllerTest {
         LocalDateTime conferenceStartDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 10, 15);
         LocalDateTime conferenceEndDateTime = LocalDateTime.of(2020, Month.JUNE, 20, 11, 15);
         conference = new Conference("conferenceName", conferenceStartDateTime, conferenceEndDateTime);
-        Integer maxCapacity = 5;
-        ConferenceRoom conferenceRoom = new ConferenceRoom("testRoomName", "testRoomLocation", maxCapacity);
-        conference.setConferenceRoom(conferenceRoom);
+        conference.setId(1L);
+        conference.setConferenceRoomId(1L);
 
         LocalDate dateOfBirth = LocalDate.of(2020, Month.JUNE, 20);
         participant = new Participant("FirstName LastName", dateOfBirth);
@@ -67,7 +56,7 @@ class ParticipantControllerTest {
 
     @Test
     void addParticipantToConference_validJson() throws Exception {
-        doReturn("test message").when(participantService).addParticipantToConference( participant, conference);
+        doReturn("test message").when(participantService).addParticipantToConference(participant, conference.getId());
         mockMvc.perform(post("/addParticipantToConference")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(validJson))
@@ -76,7 +65,7 @@ class ParticipantControllerTest {
 
     @Test
     void addParticipantToConference_invalidJson() throws Exception {
-        doReturn("test message").when(participantService).addParticipantToConference( participant, conference);
+        doReturn("test message").when(participantService).addParticipantToConference(participant, conference.getId());
         mockMvc.perform(post("/addParticipantToConference")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(""))
@@ -85,7 +74,7 @@ class ParticipantControllerTest {
 
     @Test
     void removeParticipantFromConference_validJson() throws Exception {
-        doReturn("test message").when(participantService).addParticipantToConference( participant, conference);
+        doReturn("test message").when(participantService).addParticipantToConference(participant, conference.getId());
         mockMvc.perform(delete("/removeParticipantFromConference")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(validJson))
@@ -94,7 +83,7 @@ class ParticipantControllerTest {
 
     @Test
     void removeParticipantFromConference_invalidJson() throws Exception {
-        doReturn("test message").when(participantService).addParticipantToConference( participant, conference);
+        doReturn("test message").when(participantService).addParticipantToConference(participant, conference.getId());
         mockMvc.perform(delete("/removeParticipantFromConference")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(""))

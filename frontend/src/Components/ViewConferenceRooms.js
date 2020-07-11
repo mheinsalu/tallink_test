@@ -67,19 +67,19 @@ export default function ViewConferenceRooms() {
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
                         <TableRow style={{backgroundColor: "#F8F8F8"}}>
+                            <TableCell align="center">Room ID</TableCell>
                             <TableCell align="center">Name</TableCell>
                             <TableCell align="center">Location</TableCell>
                             <TableCell align="center">Max Seats</TableCell>
-                            <TableCell align="center">Room ID</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {items.map(row => (
                             <TableRow key={row.id}>
+                                <TableCell align="center">{row.id}</TableCell>
                                 <TableCell align="center">{row.name}</TableCell>
                                 <TableCell align="center">{row.location}</TableCell>
                                 <TableCell align="center">{row.maxSeats}</TableCell>
-                                <TableCell align="center">{row.id}</TableCell>
                             </TableRow>
                         ))}
                     </TableBody>

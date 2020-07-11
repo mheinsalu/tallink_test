@@ -4,39 +4,29 @@ Task's one requirement is to have functionality
 Check conference	room availability	(based	on	registered	participants and	conference	room	max	seats)
 Based on the additional information in the parentheses, I concluded that this function should not be checking whether the conference room is available (or already booked) as the text states but whether a conference has room for additional participants.
 
-About ConferenceServiceImpl.addConference's line conference.setConferenceRoom(roomFromDb):
-I don't like this. Since UI has selectable table of rooms that are fetched from db,
-I want to be able to send room ID, save Conference to db nad have Conference.conferenceRoom populated on repo.find
-
 removeParticipant: should Participant be removed from Participant table if they are removed from Conference and are not registered to any other Conference?
 
 Tests: no need to test/check if conference room exists when adding conference because the selection of rooms available to user in UI is fetched from DB
 
-TODO: It would be better to move findExistingConference from serviceImpls to RepoHelper but I don't have time to rewrite tests
-
-Testing RepoHelper would be testing JpaRepository interface. Is this best practice?
-https://www.infoworld.com/article/3543268/junit-5-tutorial-part-2-unit-testing-spring-mvc-with-junit-5.html?page=4
-
-TODO: should I set up test base with rooms and conferences?
-
 BindingResult handling in Controllers is duplicated code. Refactor?
-
-TODO: return JSON not string in controllers? return better message
 
 Some info level logs can (should?) be changed to debug
 
-Code checked with SpotBugs. Warning: Potential CRLF Injection for logs
+Code checked with SpotBugs.
 
 Frontend based on https://medium.com/@mukundmadhav/build-and-deploy-react-app-with-spring-boot-and-mysql-6f888eb0c600
-TODO: refactor frontend for cleaner code
 
+TODO: implement assignment testing recommendations
 From assignment.txt:
 For	testing	RESTful	web	service	use	REST-assured	(https://code.google.com/p/rest-assured/)
 For	testing	User	Interface	use	SeleniumHQ	(http://docs.seleniumhq.org/)
-TODO: implement assignment testing recommendations
 
-IT would be better to send less data from frontend to API e.g. don't need to send conference.participants when removing participant
+TODO: should I set up test base with rooms and conferences?
+TODO: return JSON not string in controllers?
 
-TODO: frontend/js error jandling?
+TODO: refactor frontend for cleaner code
+TODO: frontend/js error handling?
+
+see TODOs in code as well for (possible) future improvements
 
 

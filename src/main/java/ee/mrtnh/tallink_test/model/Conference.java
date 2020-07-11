@@ -9,6 +9,7 @@ import javax.persistence.*;
 import javax.validation.ValidationException;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Positive;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -49,14 +50,16 @@ public class Conference {
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime startDateTime;
 
+    // TODO: haven't found way of tying this to ConferenceRoom table with @ManyToOne
     @NotNull(message = "Conference must have ending date and time")
     @Column(nullable = false)
     @JsonFormat(pattern = "dd-MM-yyyy HH:mm")
     private LocalDateTime endDateTime;
 
-    @ManyToOne
-    @JoinColumn(name = "CONFERENCE_ROOM_ID")
-    private ConferenceRoom conferenceRoom;
+    @NotNull(message = "Conference must have Conference Room ID")
+    @Positive(message = "Conference's Conference Room ID must be positive")
+    @Column(nullable = false)
+    private Long conferenceRoomId;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     @JoinTable(name = "CONFERENCE_PARTICIPANTS",
@@ -69,11 +72,8 @@ public class Conference {
         return participants.add(participant);
     }
 
-    public boolean removeParticipant(Participant participant) {
-        return participants.remove(participant);
+    public boolean removeParticipantById(long participantId) {
+        return participants.removeIf(participant -> participant.getId() == (participantId));
     }
 
-    public Integer getAvailableRoomCapacity() {
-        return conferenceRoom.getMaxSeats() - participants.size();
-    }
 }

@@ -18,8 +18,6 @@ import java.util.List;
 @Slf4j
 public class FrontEndController {
 
-    // TODO: tests
-
     @Autowired
     FrontEndServiceImpl frontEndService;
 

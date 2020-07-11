@@ -2,7 +2,6 @@ package ee.mrtnh.tallink_test.controller;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import ee.mrtnh.tallink_test.model.Conference;
 import ee.mrtnh.tallink_test.model.ConferenceAndParticipantWrapper;
 import ee.mrtnh.tallink_test.model.Participant;
 import ee.mrtnh.tallink_test.service.implementation.ParticipantServiceImpl;
@@ -37,11 +36,11 @@ public class ParticipantController {
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
 
-        Conference conference = request.getConference();
+        Long conferenceId = request.getConferenceId();
         Participant participant = request.getParticipant();
-        log.info("Call for ParticipantController -> addParticipantToConference. Message is {}, {}", participant, conference);
+        log.info("Call for ParticipantController -> addParticipantToConference. Message is {}, {}", participant, conferenceId);
 
-        String resultMessage = participantService.addParticipantToConference(participant, conference);
+        String resultMessage = participantService.addParticipantToConference(participant, conferenceId);
         return new ResponseEntity<>(resultMessage, HttpStatus.OK);
     }
 
@@ -53,11 +52,11 @@ public class ParticipantController {
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
 
-        Conference conference = request.getConference();
+        Long conferenceId = request.getConferenceId();
         Participant participant = request.getParticipant();
-        log.info("Call for ParticipantController -> removeParticipantFromConference. Message is {}, {}", participant, conference);
+        log.info("Call for ParticipantController -> removeParticipantFromConference. Message is {}, {}", participant, conferenceId);
 
-        String resultMessage = participantService.removeParticipantFromConference(participant, conference);
+        String resultMessage = participantService.removeParticipantFromConference(participant.getId(), conferenceId);
         return new ResponseEntity<>(resultMessage, HttpStatus.OK);
     }
 

@@ -41,7 +41,7 @@ export default function AddConference() {
     const [endDateTime, setEndDateTime] = React.useState("");
     const [conferenceRoomOptions, setConferenceRoomOptions] = React.useState([]);
     const [selectedValue, setSelectedValue] = React.useState("");
-    const [message, setMessage] = React.useState("Nothing saved in the session");
+    const [message, setMessage] = React.useState("Nothing saved in this session");
 
     const handleNameChange = event => setName(event.target.value);
     const handleStartDateTimeChange = event => setStartDateTime(event.target.value);
@@ -76,7 +76,7 @@ export default function AddConference() {
             name,
             "startDateTime": convertedStartDateTime,
             "endDateTime": convertedEndDateTime,
-            "conferenceRoom": selectedValue
+            "conferenceRoomId": selectedValue.id
         };
         sendPostJson(toInput);
     };

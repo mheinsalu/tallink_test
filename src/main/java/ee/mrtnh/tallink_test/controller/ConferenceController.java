@@ -34,6 +34,11 @@ public class ConferenceController {
             String errors = bindingResult.getAllErrors().stream().map(DefaultMessageSourceResolvable::getDefaultMessage).collect(Collectors.joining());
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
+        // TODO: can this check be done with @Valid?
+        if (conference.getStartDateTime().isAfter(conference.getEndDateTime())) {
+            String message = "Conference's start time must be before its end time";
+            return new ResponseEntity<>(message, HttpStatus.BAD_REQUEST);
+        }
 
         log.info("Call for ConferenceController -> addConference. Received message is {}", conference);
         String resultMessage = conferenceService.addConference(conference);
@@ -51,7 +56,7 @@ public class ConferenceController {
         }
 
         log.info("Call for ConferenceController -> addConference. Received message is {}", conference);
-        String resultMessage = conferenceService.cancelConference(conference);
+        String resultMessage = conferenceService.cancelConference(conference.getId());
 
         log.info("Sending response: " + resultMessage);
         return new ResponseEntity<>(resultMessage, HttpStatus.OK);
@@ -66,7 +71,7 @@ public class ConferenceController {
         }
 
         log.info("Call for ConferenceController -> checkConferenceSeatsAvailability. Received message is {}", conference);
-        String resultMessage = conferenceService.checkConferenceSeatsAvailability(conference);
+        String resultMessage = conferenceService.checkConferenceSeatsAvailability(conference.getId());
 
         log.info("Sending response: " + resultMessage);
         return new ResponseEntity<>(resultMessage, HttpStatus.OK);

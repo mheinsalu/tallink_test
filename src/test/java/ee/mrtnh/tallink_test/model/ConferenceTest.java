@@ -54,12 +54,12 @@ class ConferenceTest {
     }
 
     @Test
-    void removeParticipant_exists() {
-        assertTrue(conference.removeParticipant(participant));
+    void removeParticipantById_exists() {
+        assertTrue(conference.removeParticipantById(participant.getId()));
     }
 
     @Test
-    void removeParticipant_doesntExist() {
-        assertFalse(conference.removeParticipant(new Participant("new NewParticipant", dateOfBirth)));
+    void removeParticipantById_doesntExist() {
+        assertFalse(conference.removeParticipantById(2));
     }
 }

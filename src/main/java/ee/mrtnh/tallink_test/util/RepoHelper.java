@@ -1,5 +1,7 @@
 package ee.mrtnh.tallink_test.util;
 
+import ee.mrtnh.tallink_test.exception.ConferenceNotFoundException;
+import ee.mrtnh.tallink_test.exception.ConferenceRoomNotFoundException;
 import ee.mrtnh.tallink_test.model.Conference;
 import ee.mrtnh.tallink_test.model.ConferenceRoom;
 import ee.mrtnh.tallink_test.repo.ConferenceRepository;
@@ -7,6 +9,8 @@ import ee.mrtnh.tallink_test.repo.ConferenceRoomRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 @Slf4j
@@ -20,26 +24,33 @@ public class RepoHelper {
 
     public Conference findConference(Conference conference) {
         log.debug("Finding conference {}", conference);
-        // TODO: javax.persistence.NonUniqueResultException: query did not return a unique result if there are Conferences with same name and dates but different rooms.
-        return conferenceRepository.findConferenceByNameAndStartDateTimeAndEndDateTime(
-                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime());
+        return conferenceRepository.findConferenceByNameAndStartDateTimeAndEndDateTimeAndConferenceRoomId(
+                conference.getName(), conference.getStartDateTime(), conference.getEndDateTime(), conference.getConferenceRoomId());
     }
 
-    public ConferenceRoom findConferenceRoom(ConferenceRoom conferenceRoom) {
-        log.debug("Finding conference room {}", conferenceRoom);
-        return conferenceRoomRepository.findConferenceRoomByNameAndAndLocation(
-                conferenceRoom.getName(), conferenceRoom.getLocation());
+    public Conference findConferenceById(Long conferenceId) {
+        Optional<Conference> savedConference = conferenceRepository.findById(conferenceId);
+        if (savedConference.isEmpty()) {
+            log.warn("Conference with ID {} doesn't exist", conferenceId);
+            throw new ConferenceNotFoundException(conferenceId);
+        }
+        log.info("Found Conference {}", savedConference);
+        return savedConference.get();
     }
 
-/*    public boolean isConferenceRoomBooked(ConferenceRoom conferenceRoom, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        List<Conference> conferences = conferenceRepository.findAllByConferenceRoom_Id(conferenceRoom.getId());
-        return conferences.stream().anyMatch(conference -> {
-            if (startDateTime.isAfter(conference.getStartDateTime()) && startDateTime.isBefore(conference.getEndDateTime())) {
-                return true;
-            } else if (endDateTime.isAfter(conference.getStartDateTime()) && endDateTime.isBefore(conference.getEndDateTime())) {
-                return true;
-            } else
-                return startDateTime.isEqual(conference.getStartDateTime()) || endDateTime.isEqual(conference.getEndDateTime());
-        });
-    }*/
+    public ConferenceRoom findConferenceRoomById(Long conferenceRoomId) {
+        Optional<ConferenceRoom> roomFromDb = conferenceRoomRepository.findById(conferenceRoomId);
+        if (roomFromDb.isEmpty()) {
+            log.warn("Conference Room with ID {} doesn't exist", conferenceRoomId);
+            throw new ConferenceRoomNotFoundException(conferenceRoomId);
+        }
+        log.info("Found Conference Room {}", roomFromDb);
+        return roomFromDb.get();
+    }
+
+    public Integer getAvailableRoomCapacity(Long conferenceId) {
+        Conference conference = findConferenceById(conferenceId);
+        ConferenceRoom conferenceRoom = findConferenceRoomById(conference.getConferenceRoomId());
+        return conferenceRoom.getMaxSeats() - conference.getParticipants().size();
+    }
 }

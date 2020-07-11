@@ -67,6 +67,7 @@ export default function ViewParticipants() {
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
                         <TableRow style={{backgroundColor: "#F8F8F8"}}>
+                            <TableCell align="center">ID</TableCell>
                             <TableCell align="center">Name</TableCell>
                             <TableCell align="center">Date of Birth</TableCell>
                         </TableRow>
@@ -74,6 +75,7 @@ export default function ViewParticipants() {
                     <TableBody>
                         {items.map(row => (
                             <TableRow key={row.id}>
+                                <TableCell align="center">{row.id}</TableCell>
                                 <TableCell align="center">{row.fullName}</TableCell>
                                 <TableCell align="center">{row.dateOfBirth}</TableCell>
                             </TableRow>
