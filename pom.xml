@@ -10,7 +10,7 @@
     </parent>
     <groupId>ee.mrtnh</groupId>
     <artifactId>tallink_test</artifactId>
-    <version>1.2</version>
+    <version>1.2.0</version>
     <packaging>war</packaging>
     <name>tallink_test</name>
     <description>Test task for Tallink</description>
@@ -37,6 +37,11 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>com.h2database</groupId>
@@ -48,10 +53,11 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-tomcat</artifactId>
-            <scope>provided</scope>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>1.4.3</version>
         </dependency>
 
         <dependency>

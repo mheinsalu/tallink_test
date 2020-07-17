@@ -3,4 +3,6 @@ ver-1.2.0
         Changed exampleJSONs.txt as well to reflect new approach.
     Added tests for FrontEndController, FrontEndServiceImpl and RepoHelper.
     Changed frontend to send new style of JSON requests.
-    
+
+ver-1.2.1
+    Added API documentation generation with Swagger
