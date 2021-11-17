@@ -27,6 +27,8 @@ TODO: return JSON not string in controllers?
 TODO: refactor frontend for cleaner code
 TODO: frontend/js error handling?
 
+TODO: validate request parameters for increased security
+
 see TODOs in code as well for (possible) future improvements
 
 
