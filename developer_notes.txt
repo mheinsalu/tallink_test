@@ -29,6 +29,8 @@ TODO: frontend/js error handling?
 
 TODO: validate request parameters for increased security
 
+TODO: dockerize
+
 see TODOs in code as well for (possible) future improvements
 
 
